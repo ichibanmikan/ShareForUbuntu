@@ -1,17 +1,23 @@
-#include <stdio.h>
-
-void fuzhi(int a, int b){
-	a=b;
+int jisuan(int i)
+{
+	int b,s,g;
+	b = i/100;
+	s = (i-b*100)/10;
+	g = i%10;
+	return g*g*g+s*s*s+b*b*b;
 }
 
-int main() {
-    int hundred, ten, ind, i, ans;
-    for(i =152; i<155; i++) {
-	fuzhi(hundred, i/100);
-	fuzhi(ten, (i - hundred * 100) / 10);
-        ind = i % 10;
-        if(i==hundred*hundred*hundred + ten*ten*ten + ind*ind*ind)
-            ans = i;
-    }
-    return 0;
+
+int main()
+{
+	int a,b,i;
+	i=152;
+	while(i<155)
+	{
+		b = jisuan(i);
+		if(i==b)
+			a = b;
+		i++;
+	}
+	return 0;
 }
