@@ -1,3 +1,4 @@
+
 class2:     file format elf32-i386
 
 
@@ -188,8 +189,7 @@ int main() {
  804844f:	29 c2                	sub    %eax,%edx
  8048451:	89 d0                	mov    %edx,%eax
  8048453:	89 45 f8             	mov    %eax,-0x8(%ebp)
-        
-        if(i == hundred*hundred*hundred + ten*ten*ten + ind*ind*ind)
+        if(i==hundred*hundred*hundred + ten*ten*ten + ind*ind*ind)
  8048456:	8b 45 f0             	mov    -0x10(%ebp),%eax
  8048459:	0f af 45 f0          	imul   -0x10(%ebp),%eax
  804845d:	89 c2                	mov    %eax,%edx
@@ -216,9 +216,9 @@ int main() {
  8048488:	83 45 ec 01          	addl   $0x1,-0x14(%ebp)
  804848c:	81 7d ec 9a 00 00 00 	cmpl   $0x9a,-0x14(%ebp)
  8048493:	0f 8e 3b ff ff ff    	jle    80483d4 <main+0x12>
+	fuzhi(ten, (i - hundred * 100) / 10);
         ind = i % 10;
-        
-        if(i == hundred*hundred*hundred + ten*ten*ten + ind*ind*ind)
+        if(i==hundred*hundred*hundred + ten*ten*ten + ind*ind*ind)
             ans = i;
     }
     return 0;
@@ -325,4 +325,5 @@ Disassembly of section .fini:
  804855c:	e8 cf fd ff ff       	call   8048330 <__do_global_dtors_aux>
  8048561:	83 c4 08             	add    $0x8,%esp
  8048564:	5b                   	pop    %ebx
- 8048565:	c3                   	ret 
+ 8048565:	c3                   	ret    
+
