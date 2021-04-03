@@ -10,10 +10,10 @@
  * Please fill in the following team struct 
  */
 team_t team = {
-    "bovik",              /* Team name */
+    "CX",              /* Team name */
 
-    "Harry Q. Bovik",     /* First member full name */
-    "bovik@nowhere.edu",  /* First member email address */
+    "CX",     /* First member full name */
+    "1278074877@qq.com",  /* First member email address */
 
     "",                   /* Second member full name (leave blank if none) */
     ""                    /* Second member email addr (leave blank if none) */
@@ -44,10 +44,47 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
  * rotate - Your current working version of rotate
  * IMPORTANT: This is the version you will be graded on
  */
+/*char naive_rotate_2_descr[] = "naive_rotate_2: Naive baseline implementation";
+void naive_rotate_2(int dim, pixel *src, pixel *dst) 
+{
+    int i, j;
+    int temp;
+    for (i = 0; i < dim; i++)
+	temp=dim-i-1;
+	for (j = 0; j < dim; j++)
+	    dst[RIDX(temp, j, dim)] = src[RIDX(j, i, dim)];
+}*/
+
 char rotate_descr[] = "rotate: Current working version";
 void rotate(int dim, pixel *src, pixel *dst) 
 {
     naive_rotate(dim, src, dst);
+}
+char rotate_descr_2[] = "rotate_2: Current working version";
+void rotate_2(int dim, pixel *src, pixel *dst) 
+{
+    int i, j;
+    int dim_2=dim-1;
+    int temp;
+    for (j = 0; j < dim; j++){
+        temp=dim_2-j;
+	for (i = 0; i < dim; i++)
+	    dst[RIDX(temp, i, dim)] = src[RIDX(i, j, dim)];
+    }
+}
+
+char rotate_descr_3[] = "rotate_3: Current working version";
+void rotate_3(int dim, pixel *src, pixel *dst) 
+{
+    int i, j;
+    int dim_2=dim-1;
+    int temp;
+    for (j = 0; j < dim; j++){
+        temp=dim_2-j;
+	for (i = 0; i < dim; i++)
+	   // dst[RIDX(temp, i, dim)] = src[RIDX(i, j, dim)]; //#define RIDX(i,j,n) ((i)*(n)+(j))
+	   dst[temp*dim+i]=src[i*dim+j];
+    }
 }
 
 /*********************************************************************
@@ -62,6 +99,8 @@ void register_rotate_functions()
 {
     add_rotate_function(&naive_rotate, naive_rotate_descr);   
     add_rotate_function(&rotate, rotate_descr);   
+    add_rotate_function(&rotate_2, rotate_descr_2);
+    add_rotate_function(&rotate_3, rotate_descr_3);
     /* ... Register additional test functions here */
 }
 
