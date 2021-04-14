@@ -182,7 +182,7 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  
+  return 2;
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -203,7 +203,7 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return !((x>>n-1)&0xfffffffe);
+  return !((x>>(n-1))&0xfffffffe);
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -247,7 +247,7 @@ int isPositive(int x) {
 int isLessOrEqual(int x, int y) {
   int tempx=x>>31;
   int tempy=y>>31;
-  return ((~y|x)&1)|(!(!!x+(~y+1))&(~((0xfffffffe)|(x-y>>31)))); //y取反和x相或并且按位与1，xy正负不同时满足得1不满足得0。同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
+  return ((~tempy|tempx)&1)|(!(!!(x+(~y+1)))&(~((0xfffffffe)|((x+(~y+1))>>31)))); //y取反和x相或并且按位与1，xy正负不同时满足得1不满足得0。同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
