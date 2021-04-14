@@ -206,7 +206,8 @@ int tmin(void) {
  */
 int fitsBits(int x, int n) {
   int a=0x0;
-  a=(~a-1);
+  // a=(~a-1);
+  a=(~a+(~1+1));
   return !((x>>(n+(~1+1)))&a);
 }
 /* 
@@ -240,7 +241,7 @@ int negate(int x) {
  */
 int isPositive(int x) {
   int a=0x0;
-  a=(~a-1);
+  a=(~a+(~1+1));;
   return (!!x)&(~(a|(x>>31))); //x>>31,如果是负的得到ffffffff,正的得到0，再和-2(即为a, 0xfffffffe)相或取反，正的得1负的得0.对于0，!!x保证了x==0得到0,x!=0得到1，再和之前的结果按位与.正的1&1还是1,负的1与0得到0，零0与1得到0.
 }//x<=0返回0
 /* 
@@ -254,7 +255,7 @@ int isLessOrEqual(int x, int y) {
   int tempx=x>>31;
   int tempy=y>>31;
   int a=0x0;
-  a=(~a-1);
+  a=(~a+(~1+1));;
   return ((~tempy|tempx)&1)|(!((!!(x+(~y+1)))&(~(a|((x+(~y+1))>>31))))); //y取反和x相或并且按位与1，xy正负不同时满足得1不满足得0。同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
 }
 /*
