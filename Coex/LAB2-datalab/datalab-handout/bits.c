@@ -139,7 +139,7 @@ NOTES:
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-  return 2;
+  return ~(~x|~y);
 }
 /* 
  * getByte - Extract byte n from word x
@@ -150,15 +150,7 @@ int bitAnd(int x, int y) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-
-
-
-
-
-
-
-  return 2;
-
+  return (x<<8*(3-n))>>24;
 }
 /* 
  * logicalShift - shift x to the right by n, using a logical shift
@@ -169,7 +161,8 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-  return 2;
+  int temp=(0xffffffff>>n);
+  return (x>>n)&temp;
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -189,7 +182,7 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  return 2;
+  
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -198,7 +191,7 @@ int bang(int x) {
  *   Rating: 1
  */
 int tmin(void) {
-  return 2;
+  return 0x80000000;
 }
 /* 
  * fitsBits - return 1 if x can be represented as an 
@@ -210,7 +203,7 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+  return !((x>>n-1)&0xfffffffe);
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -221,7 +214,8 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    return 2;
+    int isposi=x>>31;//用于判断正负数，整数全是1，负数全是0
+    return (x+(isposi&((1<<n)+(~0))))>>n;//为保证负数移位值和2^n统一起来，从数轴上看应该是+2^n-1即(1<<n)+(~0)
 }
 /* 
  * negate - return -x 
@@ -231,7 +225,7 @@ int divpwr2(int x, int n) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  return ~x+1; //求相反数，按位取反+1
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
@@ -241,8 +235,8 @@ int negate(int x) {
  *   Rating: 3
  */
 int isPositive(int x) {
-  return 2;
-}
+  return (!!x)&(~((0xfffffffe)|(x>>31))); //x>>31,如果是负的得到ffffffff,正的得到0，再和-2相或取反，正的得1负的得0.对于0，!!x保证了x==0得到0,x!=0得到1，再和之前的结果按位与.正的1&1还是1,负的1与0得到0，零0与1得到0.
+}//x<=0返回0
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
  *   Example: isLessOrEqual(4,5) = 1.
@@ -251,7 +245,9 @@ int isPositive(int x) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+  int tempx=x>>31;
+  int tempy=y>>31;
+  return ((~y|x)&1)|(!(!!x+(~y+1))&(~((0xfffffffe)|(x-y>>31)))); //y取反和x相或并且按位与1，xy正负不同时满足得1不满足得0。同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
