@@ -247,7 +247,7 @@ int isPositive(int x) {
 int isLessOrEqual(int x, int y) {
   int tempx=x>>31;
   int tempy=y>>31;
-  return ((~tempy|tempx)&1)|(!(!!(x+(~y+1)))&(~((0xfffffffe)|((x+(~y+1))>>31)))); //y取反和x相或并且按位与1，xy正负不同时满足得1不满足得0。同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
+  return ((~tempy|tempx)&1)|(!((!!(x+(~y+1)))&(~((0xfffffffe)|((x+(~y+1))>>31))))); //y取反和x相或并且按位与1，xy正负不同时满足得1不满足得0。同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
