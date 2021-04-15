@@ -151,7 +151,9 @@ int bitAnd(int x, int y) {
  */
 int getByte(int x, int n) {
   return (x>>(n<<3))&0xff;
-}//取整型x的第n个字节，n左移3位，即n*2^8,因为每个字节有8位：如果取第1个字节就右移8位然后和0x000000ff按位与
+}//取整型x的第n个字节，n左移3位，即n*2^8,
+ //因为每个字节有8位：如果取第1个字节就
+ //右移8位然后和0x000000ff按位与
 /* 
  * logicalShift - shift x to the right by n, using a logical shift
  *   Can assume that 0 <= n <= 31
@@ -161,10 +163,17 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-  	int mask;
-  	x>>=n;
-    mask=(((~(1<<31))>>n)<<1)|1;
-    return x&mask;
+  	int temp;
+  	x>>=n;//x先进行算术移n位
+    temp=(((~(1<<31))>>n)<<1)|1;//1<<31得到0x80000000,
+                                //取反得到0x7fffffff,
+                                //右移n位得到后31-n位是1，
+                                //前n+1位是0，再左移1位得到前n位为0
+                                //然后x和temp按位与
+                                //由于之前x进行算术移位，x>=0，补前n位的是0
+                                //x<0补位的是1。在此情况下x按位与temp,
+                                //则补位的n位变成了0即实现了算术移位
+    return x&temp;
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -179,12 +188,12 @@ int bitCount(int x) {
   int temp3=((0x0f<<24)|(0x0f<<16)|(0x0f<<8)|(0x0f));//0x0f0f0f0f
   int temp4=((0x00<<24)|(0xff<<16)|(0x00<<8)|(0xff));//0x00ff00ff
   int temp5=((0x00<<24)|(0x00<<16)|(0xff<<8)|(0xff));//0x0000ffff
-  x=(x&temp1)+((x>>1)&temp1);//
+  x=(x&temp1)+((x>>1)&temp1);
   x=(x&temp2)+((x>>2)&temp2);
   x=(x+(x>>4))&temp3;
   x=(x+(x>>8))&temp4;
   x=(x+(x>>16))&temp5;
-  return x;
+  return x;//采用的方法就是自底向上，逐渐右移然后记录当前位置最末位是否是1
 }
 /* 
  * bang - Compute !x without using !
@@ -227,8 +236,8 @@ int fitsBits(int x, int n) {
                             0出现的越靠前表示该数的绝对值越大。
                             因此对于一个数，前移32-n位，如果可以用n位二进制补码表示，
                             那么说明它的绝对值"不够大",即前32-n位都是1，后n位才出现0.
-                            所以按照符号位补位的原则，先左移32-n位再右移32-n位得到的数字和原来的一样时
-                            (前32-n位都是1)能用n位二进制补码表示*/
+                            所以按照符号位补位的原则，先左移32-n位再右移32-n位得到的
+                            数字和原来的一样时(前32-n位都是1)能用n位二进制补码表示*/
   return !((x<<shiftNum>>shiftNum)^x);
 }
 /* 
@@ -269,7 +278,7 @@ int isPositive(int x) {
   //正的1&1还是1,负的1与0得到0，零0与1得到0.
   return !((!x)|(x>>31));//x>>31,如果是负的得到ffffffff,非负的得到0。!x,0得到1，非0得到0.
                          //此时0得到1，负数得到ffffffff，正数得到0.再取反正数返回1，非正数返回0
-}//x<=0返回0
+}//x<=0返回0 x>0返回1
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
  *   Example: isLessOrEqual(4,5) = 1.
@@ -299,7 +308,6 @@ int isLessOrEqual(int x, int y) {
                                                             //y是正的或者0那么一定比x大，就返回1
                                                             //y是负的就比x小就返回0
 }                                                     
-
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
  *   Example: ilog2(16) = 4
@@ -403,7 +411,8 @@ unsigned float_i2f(int x){
 unsigned float_twice(unsigned uf) {
 	if((uf&0x7f800000)==0){
     return ((uf&0x007fffff)<<1)|(uf&0x80000000);
-  }//非规格化数，即阶码全为0，此时就左移一位，并通过将左移结果和uf与0x80000000的按位与结果按位或控制符号位不变
+  }//非规格化数，即阶码全为0，此时就左移一位，
+   //并通过将左移结果和uf与0x80000000的按位与结果按位或控制符号位不变
 	if((uf&0x7f800000)!=0x7f800000){
     return uf+0x800000;
   }//规格化数，直接将阶码+1(0x800000代表阶码的第八位是1，其他位是0，相加即阶码加一)
