@@ -195,7 +195,7 @@ int bitCount(int x) {
  */
 int bang(int x) {
   int tempx=~x+1;//tempx是x的相反数，非零数的相反数与原数符号一定相反而0的相反数仍是0
-  return (~((tempx>>31)||(x>>31)))&0x01;//(tempx>>31)||(x>>31)在非0时必然是0xffffffff而x==0时是
+  return (~((tempx>>31)|(x>>31)))&0x01;//(tempx>>31)|(x>>31)在非0时必然是0xffffffff而x==0时是
                                         //0x00000000
                                         //按位取反后非0时得到0x00000000,x==0时得到0xffffffff。
                                         //然后和0x00000001相与，全零得到1，非0就得到了0
@@ -290,20 +290,21 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4
  */
 int ilog2(int x) {
+  int isHave0, isHave1, isHave2, isHave3, isHave4;
   int temp0, temp1, temp2, temp3, temp4;
-  int isHave0=!!(x>>16); //右移16位判断前16位有没有1，有就是1没有是0
+  isHave0=!!(x>>16); //右移16位判断前16位有没有1，有就是1没有是0
   temp0=isHave0<<4;
   x>>=temp0;//有就右移16位，因为1必定在前16位里面
-  int isHave1=!!(x>>8); //右移8位判断后16位的前8位有没有1，有就是1没有是0
+  isHave1=!!(x>>8); //右移8位判断后16位的前8位有没有1，有就是1没有是0
   temp1=isHave1<<3;
   x=x>>temp1;//有就右移8位，因为1必定在后16位的前8位里面
-  int isHave2=!!(x>>4); //右移4位判断后8位的前4位有没有1，有就是1没有是0
+  isHave2=!!(x>>4); //右移4位判断后8位的前4位有没有1，有就是1没有是0
   temp2=isHave2<<2;
   x=x>>temp2;//有就右移4位，因为1必定在后8位的前4位里面
-  int isHave3=!!(x>>2); //右移2位判断后4位的前2位有没有1，有就是1没有是0
+  isHave3=!!(x>>2); //右移2位判断后4位的前2位有没有1，有就是1没有是0
   temp3=isHave3<<1;
   x=x>>temp3;//有就右移2位，因为1必定在后4位的前2位里面
-  int isHave4=!!(x>>1); //右移2位判断后2位的前1位有没有1，有就是1没有是0
+  isHave4=!!(x>>1); //右移2位判断后2位的前1位有没有1，有就是1没有是0
   temp4=isHave4;//有就是1没有就0，直接赋值
   return temp0+temp1+temp2+temp3+temp4;
 }//求log(x),按照2的幂次数(2 4 8 16)进行判断,计算出1在最高在哪个位置
