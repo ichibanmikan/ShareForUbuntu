@@ -195,9 +195,10 @@ int bitCount(int x) {
  */
 int bang(int x) {
   int tempx=~x+1;//tempx是x的相反数，非零数的相反数与原数符号一定相反而0的相反数仍是0
-  return (~((tempx>>31)||(x>>31)))&0x01//(tempx>>31)||(x>>31)在非0时必然是0xffffffff而x==0时是0x00000000
-                                       //按位取反后非0时得到0x00000000,x==0时得到0xffffffff。
-                                       //然后和0x00000001相与，全零得到1，非0就得到了0
+  return (~((tempx>>31)||(x>>31)))&0x01;//(tempx>>31)||(x>>31)在非0时必然是0xffffffff而x==0时是
+                                        //0x00000000
+                                        //按位取反后非0时得到0x00000000,x==0时得到0xffffffff。
+                                        //然后和0x00000001相与，全零得到1，非0就得到了0
 }
 /* 
  * tmin - return minimum two's complement integer 
