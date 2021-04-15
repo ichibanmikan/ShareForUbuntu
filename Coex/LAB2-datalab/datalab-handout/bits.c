@@ -225,7 +225,7 @@ int fitsBits(int x, int n) {
                             那么说明它的绝对值"不够大",即前32-n位都是1，后n位才出现0.
                             所以按照符号位补位的原则，先左移32-n位再右移32-n位得到的数字和原来的一样时
                             (前32-n位都是1)能用n位二进制补码表示*/
-  return !((x<<shiftNum>>shifeNum)^x);
+  return !((x<<shiftNum>>shiftNum)^x);
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
