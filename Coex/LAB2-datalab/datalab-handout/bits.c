@@ -263,8 +263,11 @@ int negate(int x) {
 int isPositive(int x) {
   // int a=0x0;
   // a=(~a+(~1+1));
-  // return (!!x)&(~(a|(x>>31))); //x>>31,如果是负的得到ffffffff,正的得到0，再和-2(即为a, 0xfffffffe)相或取反，正的得1负的得0.对于0，!!x保证了x==0得到0,x!=0得到1，再和之前的结果按位与.正的1&1还是1,负的1与0得到0，零0与1得到0.
-  return !((!x)|(x>>31));//x>>31,如果是负的得到ffffffff,非负的得到0。!x,0得到1，非0得到0.此时0得到1，负数得到ffffffff，正数得到0.再取反正数返回1，非正数返回0
+  // return (!!x)&(~(a|(x>>31))); //x>>31,如果是负的得到ffffffff,正的得到0，再和-2(即为a, 0xfffffffe)
+  //相或取反，正的得1负的得0.对于0，!!x保证了x==0得到0,x!=0得到1，再和之前的结果按位与.
+  //正的1&1还是1,负的1与0得到0，零0与1得到0.
+  return !((!x)|(x>>31));//x>>31,如果是负的得到ffffffff,非负的得到0。!x,0得到1，非0得到0.
+                         //此时0得到1，负数得到ffffffff，正数得到0.再取反正数返回1，非正数返回0
 }//x<=0返回0
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -279,7 +282,9 @@ int isLessOrEqual(int x, int y) {
   int a=0x0;
   a=(~a+(~1+1));
   // return ((~tempy|tempx)&1)|(!((!!(x+(~y+1)))&(~(a|((x+(~y+1))>>31)))));
-  return (((~tempy|tempx)&1)&(tempy^tempx))|(!!((!(x+(~y+1)))|((x+(~y+1))>>31))); //y符号位扩展31位取反和x符号位扩展相或并且按位与1，xy正负不同时满足得1不满足得0。同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
+  return (((~tempy|tempx)&1)&(tempy^tempx))|(!!((!(x+(~y+1)))|((x+(~y+1))>>31))); 
+  //y符号位扩展31位取反和x符号位扩展相或并且按位与1，xy正负不同时满足得1不满足得0。
+  //同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
 }
 
 /*
@@ -320,8 +325,16 @@ int ilog2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
- return 2;
-}
+ return ((uf&0x7fffffff)>0x7f800000)?uf:(uf^0x80000000);//(uf&0x7fffffff)表示直接改变uf的符号位，将1变0
+                                                        //但是0此时不变，用以判断uf能否用来表示数。
+                                                        //如果此时得到的该数大于0x7f800000，
+                                                        //因为此时符号位恒为0，如果满足大于0x7f800000
+                                                        //则一定是因为8位阶码全为1，这个时候表示无穷。
+                                                        //此时并不是数，故只能返回它本身。
+                                                        //如果阶码不是ff,那么就输出
+                                                        //它和0x80000000的按位异或，
+                                                        //从而起到符号位取反的作用
+}//求取浮点数的相反数
 /* 
  * float_i2f - Return bit-level equivalent of expression (float) x
  *   Result is returned as unsigned int, but
@@ -331,8 +344,37 @@ unsigned float_neg(unsigned uf) {
  *   Max ops: 30
  *   Rating: 4
  */
-unsigned float_i2f(int x) {
-  return 2;
+unsigned float_i2f(int x){
+  unsigned abs_x, exponent;
+  int sign, lo, shift, detect, t1, carry, temp;
+  temp=0x80<<24;
+  if(x){
+    sign=x>>31;
+    abs_x=(x+sign)^sign;
+    lo =31;
+    while (lo) {
+      if (abs_x&(1<<lo)) {
+        break;
+      }
+      lo=lo-1;
+    }
+    if (lo>23) {
+      shift=lo-23;
+      t1=shift-1;
+      detect=abs_x>>t1;
+      carry=0;
+      if (((detect)&((detect >> 1)|(t1 && (abs_x<<(33-shift)))))&1) {
+        carry=1;
+      }
+      abs_x=abs_x>>shift;
+      abs_x+=carry;
+    } else {
+      abs_x=abs_x<<(23-lo);
+    }
+    exponent=lo+126;
+    return (sign&temp)|((exponent<<23)+abs_x);
+  }
+  return 0;
 }
 /* 
  * float_twice - Return bit-level equivalent of expression 2*f for
@@ -346,5 +388,11 @@ unsigned float_i2f(int x) {
  *   Rating: 4
  */
 unsigned float_twice(unsigned uf) {
-  return 2;
-}
+	if((uf&0x7f800000)==0){
+    return ((uf&0x007fffff)<<1)|(uf&0x80000000);
+  }//非规格化数，即阶码全为0，此时就左移一位，并通过将左移结果和uf与0x80000000的按位与结果按位或控制符号位不变
+	if((uf&0x7f800000)!=0x7f800000){
+    return uf+0x800000;
+  }//规格化数，直接将阶码+1(0x800000代表阶码的第八位是1，其他位是0，相加即阶码加一)
+  return uf;//特殊值直接返回原值
+}//返回float数的两倍
