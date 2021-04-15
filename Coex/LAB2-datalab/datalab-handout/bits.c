@@ -140,7 +140,7 @@ NOTES:
  */
 int bitAnd(int x, int y) {
   return ~(~x|~y);
-}
+}//德摩根律，用或非表示与
 /* 
  * getByte - Extract byte n from word x
  *   Bytes numbered from 0 (LSB) to 3 (MSB)
@@ -151,7 +151,7 @@ int bitAnd(int x, int y) {
  */
 int getByte(int x, int n) {
   return (x>>(n<<3))&0xff;
-}
+}//取整型x的第n个字节，n左移3位，即n*2^8,因为每个字节有8位：如果取第1个字节就右移8位然后和0x000000ff按位与
 /* 
  * logicalShift - shift x to the right by n, using a logical shift
  *   Can assume that 0 <= n <= 31
@@ -161,9 +161,10 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-  int a=0x0;
-  int temp=((~a)>>n);
-  return (x>>n)&temp;
+  	int mask;
+  	x>>=n;
+    mask=(((~(1<<31))>>n)<<1)|1;
+    return x&mask;
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -173,7 +174,17 @@ int logicalShift(int x, int n) {
  *   Rating: 4
  */
 int bitCount(int x) {
-  return 2;
+  int temp1=((0x55<<24)|(0x55<<16)|(0x55<<8)|(0x55));//0x55555555
+  int temp2=((0x33<<24)|(0x33<<16)|(0x33<<8)|(0x33));//0x33333333
+  int temp3=((0x0f<<24)|(0x0f<<16)|(0x0f<<8)|(0x0f));//0x0f0f0f0f
+  int temp4=((0x00<<24)|(0xff<<16)|(0x00<<8)|(0xff));//0x00ff00ff
+  int temp5=((0x00<<24)|(0x00<<16)|(0xff<<8)|(0xff));//0x0000ffff
+  x=(x&temp1)+((x>>1)&temp1);//
+  x=(x&temp2)+((x>>2)&temp2);
+  x=(x+(x>>4))&temp3;
+  x=(x+(x>>8))&temp4;
+  x=(x+(x>>16))&temp5;
+  return x;
 }
 /* 
  * bang - Compute !x without using !
@@ -183,7 +194,7 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  return 2;
+  return x==x+x;
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -194,7 +205,7 @@ int bang(int x) {
 int tmin(void) {
   int a=0x80;
   return a<<24;
-}
+}//返回最小的二进制补码，就是0x80000000
 /* 
  * fitsBits - return 1 if x can be represented as an 
  *  n-bit, two's complement integer.
@@ -205,10 +216,16 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  int a=0x0;
-  // a=(~a-1);
-  a=(~a+(~1+1));
-  return !((x>>(n+(~1+1)))&a);
+  // int a=0x0;
+  // a=(~a+(~1+1));
+  // return !((x>>(n+(~1+1)))&a);
+  int shiftNum=32+(~n)+1; /*按照补码表示的规则，32位的int型变量，从0-31位，
+                            0出现的约靠前表示该数的绝对值越大。
+                            因此对于一个数，前移32-n位，如果可以用n位二进制补码表示，
+                            那么说明它的绝对值"不够大",即前32-n位都是1，后n位才出现0.
+                            所以按照符号位补位的原则，先左移32-n位再右移32-n位得到的数字和原来的一样时
+                            (前32-n位都是1)能用n位二进制补码表示*/
+  return !((x<<shiftNum>>shifeNum)^x);
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -219,7 +236,7 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    int isposi=x>>31;//用于判断正负数，整数全是1，负数全是0
+    int isposi=x>>31;//用于判断正负数，非负数全是1，负数全是0
     return (x+(isposi&((1<<n)+(~0))))>>n;//为保证负数移位值和2^n统一起来，从数轴上看应该是+2^n-1即(1<<n)+(~0)
 }
 /* 
@@ -243,7 +260,7 @@ int isPositive(int x) {
   // int a=0x0;
   // a=(~a+(~1+1));
   // return (!!x)&(~(a|(x>>31))); //x>>31,如果是负的得到ffffffff,正的得到0，再和-2(即为a, 0xfffffffe)相或取反，正的得1负的得0.对于0，!!x保证了x==0得到0,x!=0得到1，再和之前的结果按位与.正的1&1还是1,负的1与0得到0，零0与1得到0.
-  return !((!x)|(x>>31));//x>>31,如果是负的得到ffffffff,正的得到0。!x,0得到1，非0得到0.此时0得到1，负数得到ffffffff，正数得到0.再取反正数返回1，非正数返回0
+  return !((!x)|(x>>31));//x>>31,如果是负的得到ffffffff,非负的得到0。!x,0得到1，非0得到0.此时0得到1，负数得到ffffffff，正数得到0.再取反正数返回1，非正数返回0
 }//x<=0返回0
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -269,8 +286,23 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4
  */
 int ilog2(int x) {
-  return 2;
-}
+  // int isHave, temp0, temp1, temp2, temp3, temp4;
+  int isHave0=!!(x>>16); //右移16位判断前16位有没有1，有就是1没有是0
+  int temp0=isHave0<<4;
+  x>>=temp0;//有就右移16位，因为1必定在前16位里面
+  int isHave1=!!(x>>8); //右移8位判断后16位的前8位有没有1，有就是1没有是0
+  int temp1=isHave1<<3;
+  x>>=temp1;//有就右移8位，因为1必定在后16位的前8位里面
+  int isHave2=!!(x>>4); //右移4位判断后8位的前4位有没有1，有就是1没有是0
+  int temp2=isHave2<<2;
+  x>>=temp2;//有就右移4位，因为1必定在后8位的前4位里面
+  int isHave3=!!(x>>2); //右移2位判断后4位的前2位有没有1，有就是1没有是0
+  int temp3=isHave3<<1;
+  x>>=temp3;//有就右移2位，因为1必定在后4位的前2位里面
+  int isHave4=!!(x>>1); //右移2位判断后2位的前1位有没有1，有就是1没有是0
+  int temp4=isHave4;//有就是1没有就0，直接赋值
+  return temp0+temp1+temp2+temp3+temp4;
+}//求log(x),按照2的幂次数(2 4 8 16)进行判断,计算出1在最高在哪个位置
 /* 
  * float_neg - Return bit-level equivalent of expression -f for
  *   floating point argument f.
