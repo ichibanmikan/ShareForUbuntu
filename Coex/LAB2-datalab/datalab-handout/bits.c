@@ -224,7 +224,7 @@ int fitsBits(int x, int n) {
   // a=(~a+(~1+1));
   // return !((x>>(n+(~1+1)))&a);
   int shiftNum=32+(~n)+1; /*按照补码表示的规则，32位的int型变量，从0-31位，
-                            0出现的约靠前表示该数的绝对值越大。
+                            0出现的越靠前表示该数的绝对值越大。
                             因此对于一个数，前移32-n位，如果可以用n位二进制补码表示，
                             那么说明它的绝对值"不够大",即前32-n位都是1，后n位才出现0.
                             所以按照符号位补位的原则，先左移32-n位再右移32-n位得到的数字和原来的一样时
@@ -241,7 +241,8 @@ int fitsBits(int x, int n) {
  */
 int divpwr2(int x, int n) {
     int isposi=x>>31;//用于判断正负数，非负数全是1，负数全是0
-    return (x+(isposi&((1<<n)+(~0))))>>n;//为保证负数移位值和2^n统一起来，从数轴上看应该是+2^n-1即(1<<n)+(~0)
+    return (x+(isposi&((1<<n)+(~0))))>>n;//为保证负数移位值和2^n统一起来，
+                                         //从数轴上看应该是+2^n-1即(1<<n)+(~0)
 }
 /* 
  * negate - return -x 
@@ -277,15 +278,27 @@ int isPositive(int x) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  int tempx=x>>31;
-  int tempy=y>>31;
-  int a=0x0;
-  a=(~a+(~1+1));
+  // int tempx=x>>31;
+  // int tempy=y>>31;
+  // int a=0x0;
+  // a=(~a+(~1+1));
   // return ((~tempy|tempx)&1)|(!((!!(x+(~y+1)))&(~(a|((x+(~y+1))>>31)))));
-  return (((~tempy|tempx)&1)&(tempy^tempx))|(!!((!(x+(~y+1)))|((x+(~y+1))>>31))); 
+  // return (((~tempy|tempx)&1)&(tempy^tempx))|(!!((!(x+(~y+1)))|((x+(~y+1))>>31))); 
   //y符号位扩展31位取反和x符号位扩展相或并且按位与1，xy正负不同时满足得1不满足得0。
-  //同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得
-}
+  // 同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得……
+  //上面方法是错的
+  int isSameSign=(x^y)>>31;//先用一个数记录x和y二进制串中不同的位，然后右移31位，表示x和y是否同号
+                           //同号那么isSameSign就是0x00000000,不同号就是0xffffffff
+  return !((((y+(~x)+1)&(~isSameSign))|(y&isSameSign))>>31);//如果y x同号,(y&isSameSign)恒等于0.
+                                                            //((y+(~x)+1)&(~isSameSign))等于y-x
+                                                            //原式可化简为!((y-x)>>31) 
+                                                            //y-x>=0返回1,<=0返回0
+                                                            //如果异号,(y&isSameSign)恒等于y.
+                                                            //((y+(~x)+1)&(~isSameSign))等于0
+                                                            //原式就是!(y>>31)
+                                                            //y是正的或者0那么一定比x大，就返回1
+                                                            //y是负的就比x小就返回0
+}                                                     
 
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
