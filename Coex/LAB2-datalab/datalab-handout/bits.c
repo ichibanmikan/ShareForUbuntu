@@ -140,7 +140,7 @@ NOTES:
  */
 int bitAnd(int x, int y) {
   return ~(~x|~y);
-}//��Ħ���ɣ��û�Ǳ�ʾ��
+}//德摩根律，用或非表示与
 /* 
  * getByte - Extract byte n from word x
  *   Bytes numbered from 0 (LSB) to 3 (MSB)
@@ -151,9 +151,9 @@ int bitAnd(int x, int y) {
  */
 int getByte(int x, int n) {
   return (x>>(n<<3))&0xff;
-}//ȡ����x�ĵ�n���ֽڣ�n����3λ����n*2^8,
- //��Ϊÿ���ֽ���8λ�����ȡ��1���ֽھ�
- //����8λȻ���0x000000ff��λ��
+}//取整型x的第n个字节，n左移3位，即n*2^8,
+ //因为每个字节有8位：如果取第1个字节就
+ //右移8位然后和0x000000ff按位与
 /* 
  * logicalShift - shift x to the right by n, using a logical shift
  *   Can assume that 0 <= n <= 31
@@ -164,15 +164,15 @@ int getByte(int x, int n) {
  */
 int logicalShift(int x, int n) {
   	int temp;
-  	x>>=n;//x�Ƚ���������nλ
-    temp=(((~(1<<31))>>n)<<1)|1;//1<<31�õ�0x80000000,
-                                //ȡ���õ�0x7fffffff,
-                                //����nλ�õ���31-nλ��1��
-                                //ǰn+1λ��0��������1λ�õ�ǰnλΪ0
-                                //Ȼ��x��temp��λ��
-                                //����֮ǰx����������λ��x>=0����ǰnλ����0
-                                //x<0��λ����1���ڴ������x��λ��temp,
-                                //��λ��nλ�����0��ʵ����������λ
+  	x>>=n;//x先进行算术移n位
+    temp=(((~(1<<31))>>n)<<1)|1;//1<<31得到0x80000000,
+                                //取反得到0x7fffffff,
+                                //右移n位得到后31-n位是1，
+                                //前n+1位是0，再左移1位得到前n位为0
+                                //然后x和temp按位与
+                                //由于之前x进行算术移位，x>=0，补前n位的是0
+                                //x<0补位的是1。在此情况下x按位与temp,
+                                //则补位的n位变成了0即实现了算术移位
     return x&temp;
 }
 /*
@@ -193,7 +193,7 @@ int bitCount(int x) {
   x=(x+(x>>4))&temp3;
   x=(x+(x>>8))&temp4;
   x=(x+(x>>16))&temp5;
-  return x;//���õķ��������Ե����ϣ�������Ȼ���¼��ǰλ����ĩλ�Ƿ���1
+  return x;//采用的方法就是自底向上，逐渐右移然后记录当前位置最末位是否是1
 }
 /* 
  * bang - Compute !x without using !
@@ -203,11 +203,11 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  int tempx=~x+1;//tempx��x���෴�������������෴����ԭ������һ���෴��0���෴������0
-  return (~((tempx>>31)|(x>>31)))&0x01;//(tempx>>31)|(x>>31)�ڷ�0ʱ��Ȼ��0xffffffff��x==0ʱ��
+  int tempx=~x+1;//tempx是x的相反数，非零数的相反数与原数符号一定相反而0的相反数仍是0
+  return (~((tempx>>31)|(x>>31)))&0x01;//(tempx>>31)|(x>>31)在非0时必然是0xffffffff而x==0时是
                                         //0x00000000
-                                        //��λȡ�����0ʱ�õ�0x00000000,x==0ʱ�õ�0xffffffff��
-                                        //Ȼ���0x00000001���룬ȫ��õ�1����0�͵õ���0
+                                        //按位取反后非0时得到0x00000000,x==0时得到0xffffffff。
+                                        //然后和0x00000001相与，全零得到1，非0就得到了0
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -218,7 +218,7 @@ int bang(int x) {
 int tmin(void) {
   int a=0x80;
   return a<<24;
-}//������С�Ķ����Ʋ��룬����0x80000000
+}//返回最小的二进制补码，就是0x80000000
 /* 
  * fitsBits - return 1 if x can be represented as an 
  *  n-bit, two's complement integer.
@@ -232,12 +232,12 @@ int fitsBits(int x, int n) {
   // int a=0x0;
   // a=(~a+(~1+1));
   // return !((x>>(n+(~1+1)))&a);
-  int shiftNum=32+(~n)+1; /*���ղ����ʾ�Ĺ���32λ��int�ͱ�������0-31λ��
-                            0���ֵ�Խ��ǰ��ʾ�����ľ���ֵԽ��
-                            ��˶���һ������ǰ��32-nλ�����������nλ�����Ʋ����ʾ��
-                            ��ô˵�����ľ���ֵ"������",��ǰ32-nλ����1����nλ�ų���0.
-                            ���԰��շ���λ��λ��ԭ��������32-nλ������32-nλ�õ���
-                            ���ֺ�ԭ����һ��ʱ(ǰ32-nλ����1)����nλ�����Ʋ����ʾ*/
+  int shiftNum=32+(~n)+1; /*按照补码表示的规则，32位的int型变量，从0-31位，
+                            0出现的越靠前表示该数的绝对值越大。
+                            因此对于一个数，前移32-n位，如果可以用n位二进制补码表示，
+                            那么说明它的绝对值"不够大",即前32-n位都是1，后n位才出现0.
+                            所以按照符号位补位的原则，先左移32-n位再右移32-n位得到的
+                            数字和原来的一样时(前32-n位都是1)能用n位二进制补码表示*/
   return !((x<<shiftNum>>shiftNum)^x);
 }
 /* 
@@ -249,9 +249,9 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    int isposi=x>>31;//�����ж����������Ǹ���ȫ��1������ȫ��0
-    return (x+(isposi&((1<<n)+(~0))))>>n;//Ϊ��֤������λֵ��2^nͳһ������
-                                         //�������Ͽ�Ӧ����+2^n-1��(1<<n)+(~0)
+    int isposi=x>>31;//用于判断正负数，非负数全是1，负数全是0
+    return (x+(isposi&((1<<n)+(~0))))>>n;//为保证负数移位值和2^n统一起来，
+                                         //从数轴上看应该是+2^n-1即(1<<n)+(~0)
 }
 /* 
  * negate - return -x 
@@ -261,7 +261,7 @@ int divpwr2(int x, int n) {
  *   Rating: 2
  */
 int negate(int x) {
-  return ~x+1; //���෴������λȡ��+1
+  return ~x+1; //求相反数，按位取反+1
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
@@ -273,12 +273,12 @@ int negate(int x) {
 int isPositive(int x) {
   // int a=0x0;
   // a=(~a+(~1+1));
-  // return (!!x)&(~(a|(x>>31))); //x>>31,����Ǹ��ĵõ�ffffffff,���ĵõ�0���ٺ�-2(��Ϊa, 0xfffffffe)
-  //���ȡ�������ĵ�1���ĵ�0.����0��!!x��֤��x==0�õ�0,x!=0�õ�1���ٺ�֮ǰ�Ľ����λ��.
-  //����1&1����1,����1��0�õ�0����0��1�õ�0.
-  return !((!x)|(x>>31));//x>>31,����Ǹ��ĵõ�ffffffff,�Ǹ��ĵõ�0��!x,0�õ�1����0�õ�0.
-                         //��ʱ0�õ�1�������õ�ffffffff�������õ�0.��ȡ����������1������������0
-}//x<=0����0 x>0����1
+  // return (!!x)&(~(a|(x>>31))); //x>>31,如果是负的得到ffffffff,正的得到0，再和-2(即为a, 0xfffffffe)
+  //相或取反，正的得1负的得0.对于0，!!x保证了x==0得到0,x!=0得到1，再和之前的结果按位与.
+  //正的1&1还是1,负的1与0得到0，零0与1得到0.
+  return !((!x)|(x>>31));//x>>31,如果是负的得到ffffffff,非负的得到0。!x,0得到1，非0得到0.
+                         //此时0得到1，负数得到ffffffff，正数得到0.再取反正数返回1，非正数返回0
+}//x<=0返回0 x>0返回1
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
  *   Example: isLessOrEqual(4,5) = 1.
@@ -293,20 +293,20 @@ int isLessOrEqual(int x, int y) {
   // a=(~a+(~1+1));
   // return ((~tempy|tempx)&1)|(!((!!(x+(~y+1)))&(~(a|((x+(~y+1))>>31)))));
   // return (((~tempy|tempx)&1)&(tempy^tempx))|(!!((!(x+(~y+1)))|((x+(~y+1))>>31))); 
-  //y����λ��չ31λȡ����x����λ��չ����Ұ�λ��1��xy������ͬʱ�����1�������0��
-  // ͬʱ����isPositive�����ķ�����ȡ����x-y(x+(~y+1))С��0��á���
-  //���淽���Ǵ���
-  int isSameSign=(x^y)>>31;//����һ������¼x��y�����ƴ��в�ͬ��λ��Ȼ������31λ����ʾx��y�Ƿ�ͬ��
-                           //ͬ����ôisSameSign����0x00000000,��ͬ�ž���0xffffffff
-  return !((((y+(~x)+1)&(~isSameSign))|(y&isSameSign))>>31);//���y xͬ��,(y&isSameSign)�����0.
-                                                            //((y+(~x)+1)&(~isSameSign))����y-x
-                                                            //ԭʽ�ɻ���Ϊ!((y-x)>>31) 
-                                                            //y-x>=0����1,<=0����0
-                                                            //������,(y&isSameSign)�����y.
-                                                            //((y+(~x)+1)&(~isSameSign))����0
-                                                            //ԭʽ����!(y>>31)
-                                                            //y�����Ļ���0��ôһ����x�󣬾ͷ���1
-                                                            //y�Ǹ��ľͱ�xС�ͷ���0
+  //y符号位扩展31位取反和x符号位扩展相或并且按位与1，xy正负不同时满足得1不满足得0。
+  // 同时按照isPositive函数的方法并取反，x-y(x+(~y+1))小于0则得……
+  //上面方法是错的
+  int isSameSign=(x^y)>>31;//先用一个数记录x和y二进制串中不同的位，然后右移31位，表示x和y是否同号
+                           //同号那么isSameSign就是0x00000000,不同号就是0xffffffff
+  return !((((y+(~x)+1)&(~isSameSign))|(y&isSameSign))>>31);//如果y x同号,(y&isSameSign)恒等于0.
+                                                            //((y+(~x)+1)&(~isSameSign))等于y-x
+                                                            //原式可化简为!((y-x)>>31) 
+                                                            //y-x>=0返回1,<=0返回0
+                                                            //如果异号,(y&isSameSign)恒等于y.
+                                                            //((y+(~x)+1)&(~isSameSign))等于0
+                                                            //原式就是!(y>>31)
+                                                            //y是正的或者0那么一定比x大，就返回1
+                                                            //y是负的就比x小就返回0
 }                                                     
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
@@ -318,22 +318,22 @@ int isLessOrEqual(int x, int y) {
 int ilog2(int x) {
   int isHave0, isHave1, isHave2, isHave3, isHave4;
   int temp0, temp1, temp2, temp3, temp4;
-  isHave0=!!(x>>16); //����16λ�ж�ǰ16λ��û��1���о���1û����0
+  isHave0=!!(x>>16); //右移16位判断前16位有没有1，有就是1没有是0
   temp0=isHave0<<4;
-  x>>=temp0;//�о�����16λ����Ϊ1�ض���ǰ16λ����
-  isHave1=!!(x>>8); //����8λ�жϺ�16λ��ǰ8λ��û��1���о���1û����0
+  x>>=temp0;//有就右移16位，因为1必定在前16位里面
+  isHave1=!!(x>>8); //右移8位判断后16位的前8位有没有1，有就是1没有是0
   temp1=isHave1<<3;
-  x=x>>temp1;//�о�����8λ����Ϊ1�ض��ں�16λ��ǰ8λ����
-  isHave2=!!(x>>4); //����4λ�жϺ�8λ��ǰ4λ��û��1���о���1û����0
+  x=x>>temp1;//有就右移8位，因为1必定在后16位的前8位里面
+  isHave2=!!(x>>4); //右移4位判断后8位的前4位有没有1，有就是1没有是0
   temp2=isHave2<<2;
-  x=x>>temp2;//�о�����4λ����Ϊ1�ض��ں�8λ��ǰ4λ����
-  isHave3=!!(x>>2); //����2λ�жϺ�4λ��ǰ2λ��û��1���о���1û����0
+  x=x>>temp2;//有就右移4位，因为1必定在后8位的前4位里面
+  isHave3=!!(x>>2); //右移2位判断后4位的前2位有没有1，有就是1没有是0
   temp3=isHave3<<1;
-  x=x>>temp3;//�о�����2λ����Ϊ1�ض��ں�4λ��ǰ2λ����
-  isHave4=!!(x>>1); //����2λ�жϺ�2λ��ǰ1λ��û��1���о���1û����0
-  temp4=isHave4;//�о���1û�о�0��ֱ�Ӹ�ֵ
+  x=x>>temp3;//有就右移2位，因为1必定在后4位的前2位里面
+  isHave4=!!(x>>1); //右移2位判断后2位的前1位有没有1，有就是1没有是0
+  temp4=isHave4;//有就是1没有就0，直接赋值
   return temp0+temp1+temp2+temp3+temp4;
-}//��log(x),����2���ݴ���(2 4 8 16)�����ж�,�����1��������ĸ�λ��
+}//求log(x),按照2的幂次数(2 4 8 16)进行判断,计算出1在最高在哪个位置
 /* 
  * float_neg - Return bit-level equivalent of expression -f for
  *   floating point argument f.
@@ -346,16 +346,16 @@ int ilog2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
- return ((uf&0x7fffffff)>0x7f800000)?uf:(uf^0x80000000);//(uf&0x7fffffff)��ʾֱ�Ӹı�uf�ķ���λ����1��0
-                                                        //����0��ʱ���䣬�����ж�uf�ܷ�������ʾ����
-                                                        //�����ʱ�õ��ĸ�������0x7f800000��
-                                                        //��Ϊ��ʱ����λ��Ϊ0������������0x7f800000
-                                                        //��һ������Ϊ8λ����ȫΪ1�����ʱ���ʾ���
-                                                        //��ʱ������������ֻ�ܷ�����������
-                                                        //������벻��ff,��ô�����
-                                                        //����0x80000000�İ�λ���
-                                                        //�Ӷ��𵽷���λȡ��������
-}//��ȡ���������෴��
+ return ((uf&0x7fffffff)>0x7f800000)?uf:(uf^0x80000000);//(uf&0x7fffffff)表示直接改变uf的符号位，将1变0
+                                                        //但是0此时不变，用以判断uf能否用来表示数。
+                                                        //如果此时得到的该数大于0x7f800000，
+                                                        //因为此时符号位恒为0，如果满足大于0x7f800000
+                                                        //则一定是因为8位阶码全为1，这个时候表示无穷。
+                                                        //此时并不是数，故只能返回它本身。
+                                                        //如果阶码不是ff,那么就输出
+                                                        //它和0x80000000的按位异或，
+                                                        //从而起到符号位取反的作用
+}//求取浮点数的相反数
 /* 
  * float_i2f - Return bit-level equivalent of expression (float) x
  *   Result is returned as unsigned int, but
@@ -411,10 +411,10 @@ unsigned float_i2f(int x){
 unsigned float_twice(unsigned uf) {
 	if((uf&0x7f800000)==0){
     return ((uf&0x007fffff)<<1)|(uf&0x80000000);
-  }//�ǹ������������ȫΪ0����ʱ������һλ��
-   //��ͨ�������ƽ����uf��0x80000000�İ�λ������λ����Ʒ���λ����
+  }//非规格化数，即阶码全为0，此时就左移一位，
+   //并通过将左移结果和uf与0x80000000的按位与结果按位或控制符号位不变
 	if((uf&0x7f800000)!=0x7f800000){
     return uf+0x800000;
-  }//�������ֱ�ӽ�����+1(0x800000��������ĵڰ�λ��1������λ��0����Ӽ������һ)
-  return uf;//����ֱֵ�ӷ���ԭֵ
-}//����float��������
+  }//规格化数，直接将阶码+1(0x800000代表阶码的第八位是1，其他位是0，相加即阶码加一)
+  return uf;//特殊值直接返回原值
+}//返回float数的两倍
