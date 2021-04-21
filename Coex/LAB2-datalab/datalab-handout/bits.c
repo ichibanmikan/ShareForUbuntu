@@ -121,8 +121,6 @@ NOTES:
  *   2. Use the BDD checker to formally verify that your solutions produce 
  *      the correct answers.
  */
-
-
 #endif
 /* 
  * bitAnd - x&y using only ~ and | 
