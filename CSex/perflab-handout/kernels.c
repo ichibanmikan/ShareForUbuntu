@@ -142,7 +142,7 @@ void rotate_5(int dim, pixel *src, pixel *dst) {
             dst[temp+i+31]=src[(i+31)*dim+j];
         }
     }
-}//根据课本5-6内容及查阅相关资料进行如上优化
+}
 
 /*********************************************************************
  * register_rotate_functions - Register all of your different versions
