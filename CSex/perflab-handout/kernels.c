@@ -179,7 +179,6 @@ void rotate_5(int dim, pixel *src, pixel *dst) {
     //         dst[tempI2+31]=src[tempDim2+31*dim];
     //     }
     // }
-void naive_rotate5(int dim, pixel *src, pixel *dst){
     int i,j,tmp1=dim*dim,tmp2=dim *31,tmp3=tmp1-dim,tmp4=tmp1+32,tmp5=dim+31;
     dst+=tmp3;  
     for(j=0;j<dim;j++){  
