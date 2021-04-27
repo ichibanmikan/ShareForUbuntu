@@ -103,9 +103,12 @@ void rotate_4(int dim, pixel *src, pixel *dst) {
 char rotate_descr_5[] = "rotate_5: Current working version";
 void rotate_5(int dim, pixel *src, pixel *dst) {
     int i, j;
-
-    for (i = 0; i < dim; i+=32)
-	for (j = 0; j < dim; j++){
+    int dim_2=dim-1;
+    int temp, temp2;
+    for (j = 0; j < dim; j+=2){
+        temp=(dim_2-j)*dim;
+        temp2=(dim_2-j-1)*dim;
+        for (i = 0; i < dim; i+=32){
             dst[temp+i]=src[i*dim+j];
             dst[temp+i+1]=src[(i+1)*dim+j];
             dst[temp+i+2]=src[(i+2)*dim+j];
@@ -138,49 +141,41 @@ void rotate_5(int dim, pixel *src, pixel *dst) {
             dst[temp+i+29]=src[(i+29)*dim+j];
             dst[temp+i+30]=src[(i+30)*dim+j];
             dst[temp+i+31]=src[(i+31)*dim+j];
+            dst[temp2+i]=src[i*dim+j+1];
+            dst[temp2+i+1]=src[(i+1)*dim+j+1];
+            dst[temp2+i+2]=src[(i+2)*dim+j+1];
+            dst[temp2+i+3]=src[(i+3)*dim+j+1];
+            dst[temp2+i+4]=src[(i+4)*dim+j+1];
+            dst[temp2+i+5]=src[(i+5)*dim+j+1];
+            dst[temp2+i+6]=src[(i+6)*dim+j+1];
+            dst[temp2+i+7]=src[(i+7)*dim+j+1];
+            dst[temp2+i+8]=src[(i+8)*dim+j+1];
+            dst[temp2+i+9]=src[(i+9)*dim+j+1];
+            dst[temp2+i+10]=src[(i+10)*dim+j+1];
+            dst[temp2+i+11]=src[(i+11)*dim+j+1];
+            dst[temp2+i+12]=src[(i+12)*dim+j+1];
+            dst[temp2+i+13]=src[(i+13)*dim+j+1];
+            dst[temp2+i+14]=src[(i+14)*dim+j+1];
+            dst[temp2+i+15]=src[(i+15)*dim+j+1];
+            dst[temp2+i+16]=src[(i+16)*dim+j+1];
+            dst[temp2+i+17]=src[(i+17)*dim+j+1];
+            dst[temp2+i+18]=src[(i+18)*dim+j+1];
+            dst[temp2+i+19]=src[(i+19)*dim+j+1];
+            dst[temp2+i+20]=src[(i+20)*dim+j+1];
+            dst[temp2+i+21]=src[(i+21)*dim+j+1];
+            dst[temp2+i+22]=src[(i+22)*dim+j+1];
+            dst[temp2+i+23]=src[(i+23)*dim+j+1];
+            dst[temp2+i+24]=src[(i+24)*dim+j+1];
+            dst[temp2+i+25]=src[(i+25)*dim+j+1];
+            dst[temp2+i+26]=src[(i+26)*dim+j+1];
+            dst[temp2+i+27]=src[(i+27)*dim+j+1];
+            dst[temp2+i+28]=src[(i+28)*dim+j+1];
+            dst[temp2+i+29]=src[(i+29)*dim+j+1];
+            dst[temp2+i+30]=src[(i+30)*dim+j+1];
+            dst[temp2+i+31]=src[(i+31)*dim+j+1];
+        }
     }
-
-    // int i, j;
-    // int dim_2=dim-1;
-    // int temp;
-    // for (j = 0; j < dim; ++j){
-    //     temp=(dim_2-j)*dim;
-    //     for (i = 0; i < dim; i+=32){
-    //         dst[temp+i]=src[i*dim+j];
-    //         dst[temp+i+1]=src[(i+1)*dim+j];
-    //         dst[temp+i+2]=src[(i+2)*dim+j];
-    //         dst[temp+i+3]=src[(i+3)*dim+j];
-    //         dst[temp+i+4]=src[(i+4)*dim+j];
-    //         dst[temp+i+5]=src[(i+5)*dim+j];
-    //         dst[temp+i+6]=src[(i+6)*dim+j];
-    //         dst[temp+i+7]=src[(i+7)*dim+j];
-    //         dst[temp+i+8]=src[(i+8)*dim+j];
-    //         dst[temp+i+9]=src[(i+9)*dim+j];
-    //         dst[temp+i+10]=src[(i+10)*dim+j];
-    //         dst[temp+i+11]=src[(i+11)*dim+j];
-    //         dst[temp+i+12]=src[(i+12)*dim+j];
-    //         dst[temp+i+13]=src[(i+13)*dim+j];
-    //         dst[temp+i+14]=src[(i+14)*dim+j];
-    //         dst[temp+i+15]=src[(i+15)*dim+j];
-    //         dst[temp+i+16]=src[(i+16)*dim+j];
-    //         dst[temp+i+17]=src[(i+17)*dim+j];
-    //         dst[temp+i+18]=src[(i+18)*dim+j];
-    //         dst[temp+i+19]=src[(i+19)*dim+j];
-    //         dst[temp+i+20]=src[(i+20)*dim+j];
-    //         dst[temp+i+21]=src[(i+21)*dim+j];
-    //         dst[temp+i+22]=src[(i+22)*dim+j];
-    //         dst[temp+i+23]=src[(i+23)*dim+j];
-    //         dst[temp+i+24]=src[(i+24)*dim+j];
-    //         dst[temp+i+25]=src[(i+25)*dim+j];
-    //         dst[temp+i+26]=src[(i+26)*dim+j];
-    //         dst[temp+i+27]=src[(i+27)*dim+j];
-    //         dst[temp+i+28]=src[(i+28)*dim+j];
-    //         dst[temp+i+29]=src[(i+29)*dim+j];
-    //         dst[temp+i+30]=src[(i+30)*dim+j];
-    //         dst[temp+i+31]=src[(i+31)*dim+j];
-    //     }
-    // }
-}//根据课本5-6内容及查阅相关资料进行如上优化
+}
 
 /*********************************************************************
  * register_rotate_functions - Register all of your different versions
