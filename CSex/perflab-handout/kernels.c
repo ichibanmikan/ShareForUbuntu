@@ -107,10 +107,25 @@ void rotate_5(int dim, pixel *src, pixel *dst) {
     int temp;
     for (j = 0; j < dim; ++j){
         temp=(dim_2-j)*dim;
-        for (i = 0; i < dim; i+=2){
+        for (i = 0; i < dim; i+=16){
             // dst[RIDX(temp, i, dim)] = src[RIDX(i, j, dim)]; //#define RIDX(i,j,n) ((i)*(n)+(j))
             dst[temp+i]=src[i*dim+j];
             dst[temp+i+1]=src[(i+1)*dim+j];
+            dst[temp+i+2]=src[(i+2)*dim+j];
+            dst[temp+i+3]=src[(i+3)*dim+j];
+            dst[temp+i+4]=src[(i+4)*dim+j];
+            dst[temp+i+5]=src[(i+5)*dim+j];
+            dst[temp+i+6]=src[(i+6)*dim+j];
+            dst[temp+i+7]=src[(i+7)*dim+j];
+            dst[temp+i+8]=src[(i+8)*dim+j];
+            dst[temp+i+9]=src[(i+9)*dim+j];
+            dst[temp+i+10]=src[(i+10)*dim+j];
+            dst[temp+i+11]=src[(i+11)*dim+j];
+            dst[temp+i+12]=src[(i+12)*dim+j];
+            dst[temp+i+13]=src[(i+13)*dim+j];
+            dst[temp+i+14]=src[(i+14)*dim+j];
+            dst[temp+i+15]=src[(i+15)*dim+j];
+            dst[temp+i+16]=src[(i+16)*dim+j];
         }
     }
 }//根据课本5-6内容及查阅相关资料进行如上优化
