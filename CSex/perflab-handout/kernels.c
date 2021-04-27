@@ -100,89 +100,12 @@ void rotate_4(int dim, pixel *src, pixel *dst) {
     }
 }//根据课本5-6内容及查阅相关资料进行如上优化
 
-char rotate_descr_5[] = "rotate_5: Current working version";
-void rotate_5(int dim, pixel *src, pixel *dst) {
-    // int i, j;
-    // int dim_2=dim-1;
-    // int temp, temp2, tempI, tempDim, tempI2, tempDim2;
-    // for (j = 0; j < dim; j+=2){
-    //     temp=(dim_2-j)*dim;
-    //     temp2=temp-dim;
-    //     for (i = 0; i < dim; i+=32){
-    //         tempI=temp+i;
-    //         tempDim=i*dim+j;
-    //         tempI2=temp2+i;
-    //         tempDim2=i*dim+j+1;
-    //         dst[tempI]=src[tempDim];
-    //         dst[tempI+1]=src[tempDim+dim];
-    //         dst[tempI+2]=src[tempDim+2*dim];
-    //         dst[tempI+3]=src[tempDim+3*dim];
-    //         dst[tempI+4]=src[tempDim+4*dim];
-    //         dst[tempI+5]=src[tempDim+5*dim];
-    //         dst[tempI+6]=src[tempDim+6*dim];
-    //         dst[tempI+7]=src[tempDim+7*dim];
-    //         dst[tempI+8]=src[tempDim+8*dim];
-    //         dst[tempI+9]=src[tempDim+9*dim];
-    //         dst[tempI+10]=src[tempDim+10*dim];
-    //         dst[tempI+11]=src[tempDim+11*dim];
-    //         dst[tempI+12]=src[tempDim+12*dim];
-    //         dst[tempI+13]=src[tempDim+13*dim];
-    //         dst[tempI+14]=src[tempDim+14*dim];
-    //         dst[tempI+15]=src[tempDim+15*dim];
-    //         dst[tempI+16]=src[tempDim+16*dim];
-    //         dst[tempI+17]=src[tempDim+17*dim];
-    //         dst[tempI+18]=src[tempDim+18*dim];
-    //         dst[tempI+19]=src[tempDim+19*dim];
-    //         dst[tempI+20]=src[tempDim+20*dim];
-    //         dst[tempI+21]=src[tempDim+21*dim];
-    //         dst[tempI+22]=src[tempDim+22*dim];
-    //         dst[tempI+23]=src[tempDim+23*dim];
-    //         dst[tempI+24]=src[tempDim+24*dim];
-    //         dst[tempI+25]=src[tempDim+25*dim];
-    //         dst[tempI+26]=src[tempDim+26*dim];
-    //         dst[tempI+27]=src[tempDim+27*dim];
-    //         dst[tempI+28]=src[tempDim+28*dim];
-    //         dst[tempI+29]=src[tempDim+29*dim];
-    //         dst[tempI+30]=src[tempDim+30*dim];
-    //         dst[tempI+31]=src[tempDim+31*dim];
-    //         dst[tempI2]=src[tempDim2];
-    //         dst[tempI2+1]=src[tempDim+dim];
-    //         dst[tempI2+2]=src[tempDim2+2*dim];
-    //         dst[tempI2+3]=src[tempDim2+3*dim];
-    //         dst[tempI2+4]=src[tempDim2+4*dim];
-    //         dst[tempI2+5]=src[tempDim2+5*dim];
-    //         dst[tempI2+6]=src[tempDim2+6*dim];
-    //         dst[tempI2+7]=src[tempDim2+7*dim];
-    //         dst[tempI2+8]=src[tempDim2+8*dim];
-    //         dst[tempI2+9]=src[tempDim2+9*dim];
-    //         dst[tempI2+10]=src[tempDim2+10*dim];
-    //         dst[tempI2+11]=src[tempDim2+11*dim];
-    //         dst[tempI2+12]=src[tempDim2+12*dim];
-    //         dst[tempI2+13]=src[tempDim2+13*dim];
-    //         dst[tempI2+14]=src[tempDim2+14*dim];
-    //         dst[tempI2+15]=src[tempDim2+15*dim];
-    //         dst[tempI2+16]=src[tempDim2+16*dim];
-    //         dst[tempI2+17]=src[tempDim2+17*dim];
-    //         dst[tempI2+18]=src[tempDim2+18*dim];
-    //         dst[tempI2+19]=src[tempDim2+19*dim];
-    //         dst[tempI2+20]=src[tempDim2+20*dim];
-    //         dst[tempI2+21]=src[tempDim2+21*dim];
-    //         dst[tempI2+22]=src[tempDim2+22*dim];
-    //         dst[tempI2+23]=src[tempDim2+23*dim];
-    //         dst[tempI2+24]=src[tempDim2+24*dim];
-    //         dst[tempI2+25]=src[tempDim2+25*dim];
-    //         dst[tempI2+26]=src[tempDim2+26*dim];
-    //         dst[tempI2+27]=src[tempDim2+27*dim];
-    //         dst[tempI2+28]=src[tempDim2+28*dim];
-    //         dst[tempI2+29]=src[tempDim2+29*dim];
-    //         dst[tempI2+30]=src[tempDim2+30*dim];
-    //         dst[tempI2+31]=src[tempDim2+31*dim];
-    //     }
-    // }
-    int i,j,tmp1=dim*dim,tmp2=dim *31,tmp3=tmp1-dim,tmp4=tmp1+32,tmp5=dim+31;
+char rotate_descr5[] = "rotate_5: Current working version";
+void rotate_5(int dim, pixel *src, pixel *dst){
+    int i,j,tmp1=dim*dim,tmp2=dim *31,tmp3=tmp1-dim,tmp4=tmp1+32,tmp5=dim+31;//定义中间变量
     dst+=tmp3;  
-    for(j=0;j<dim;j++){  
-        for(i=0; i< dim; i+=32){    
+    for(i=0; i< dim; i+=32){         
+        for(j=0;j<dim;j++){//将for循环展开，并通过指针的形式实现对图形的翻转，以32为一个步长       
             *dst=*src;
             dst++;src+=dim;
             *dst=*src;
@@ -252,7 +175,7 @@ void rotate_5(int dim, pixel *src, pixel *dst) {
         }
         src+=tmp2;
         dst+=tmp4;
-    }      
+    }         
 }
 
 /*********************************************************************
