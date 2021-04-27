@@ -100,6 +100,20 @@ void rotate_4(int dim, pixel *src, pixel *dst) {
     }
 }//根据课本5-6内容及查阅相关资料进行如上优化
 
+void rotate_5(int dim, pixel *src, pixel *dst) {
+    int i, j;
+    int dim_2=dim-1;
+    int temp;
+    for (j = 0; j < dim; ++j){
+        temp=(dim_2-j)*dim;
+        for (i = 0; i < dim; i+=2){
+            // dst[RIDX(temp, i, dim)] = src[RIDX(i, j, dim)]; //#define RIDX(i,j,n) ((i)*(n)+(j))
+            dst[temp+i]=src[i*dim+j];
+            dst[temp+i+1]=src[(i+1)*dim+j];
+        }
+    }
+}//根据课本5-6内容及查阅相关资料进行如上优化
+
 /*********************************************************************
  * register_rotate_functions - Register all of your different versions
  *     of the rotate kernel with the driver by calling the
