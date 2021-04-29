@@ -100,7 +100,7 @@ void rotate_4(int dim, pixel *src, pixel *dst) {
     }
 }//根据课本5-6内容及查阅相关资料进行如上优化
 
-char rotate_descr5[] = "rotate_5: Current working version";
+char rotate_descr_5[] = "rotate_5: Current working version";
 void rotate_5(int dim, pixel *src, pixel *dst){
     int i,j,tmp1=dim*dim,tmp2=dim *31,tmp3=tmp1-dim,tmp4=tmp1+32,tmp5=dim+31;//定义中间变量
     dst+=tmp3;  
@@ -282,7 +282,6 @@ char naive_smooth_descr[] = "naive_smooth: Naive baseline implementation";
 void naive_smooth(int dim, pixel *src, pixel *dst) 
 {
     int i, j;
-
     for (i = 0; i < dim; i++)
 	for (j = 0; j < dim; j++)
 	    dst[RIDX(i, j, dim)] = avg(dim, i, j, src);
@@ -298,6 +297,31 @@ void smooth(int dim, pixel *src, pixel *dst)
     naive_smooth(dim, src, dst);
 }
 
+char smooth_2_descr[] = "smooth_2: Current working version";
+void smooth_2(int dim, pixel *src, pixel *dst) {
+    int i, j;
+    for (j = 0; j < dim; j+=4){
+        for (i = 0; i < dim; i+=4){
+            dst[RIDX(i, j, dim)] = avg(dim, i, j, src);
+            dst[RIDX(i+1, j, dim)] = avg(dim, i+1, j, src);
+            dst[RIDX(i+2, j, dim)] = avg(dim, i+2, j, src);
+            dst[RIDX(i+3, j, dim)] = avg(dim, i+3, j, src);
+            dst[RIDX(i, j+1, dim)] = avg(dim, i, j+1, src);
+            dst[RIDX(i+1, j+1, dim)] = avg(dim, i+1, j+1, src);
+            dst[RIDX(i+2, j+1, dim)] = avg(dim, i+2, j+1, src);
+            dst[RIDX(i+3, j+1, dim)] = avg(dim, i+3, j+1, src);
+            dst[RIDX(i, j+2, dim)] = avg(dim, i, j+2, src);
+            dst[RIDX(i+1, j+2, dim)] = avg(dim, i+1, j+2, src);
+            dst[RIDX(i+2, j+2, dim)] = avg(dim, i+2, j+2, src);
+            dst[RIDX(i+3, j+2, dim)] = avg(dim, i+3, j+2, src);
+            dst[RIDX(i, j+3, dim)] = avg(dim, i, j+3, src);
+            dst[RIDX(i+1, j+3, dim)] = avg(dim, i+1, j+3, src);
+            dst[RIDX(i+2, j+3, dim)] = avg(dim, i+2, j+3, src);
+            dst[RIDX(i+3, j+3, dim)] = avg(dim, i+3, j+3, src);
+        }
+    }//交换循环的次序
+}//#define RIDX(i,j,n) ((i)*(n)+(j))
+
 
 /********************************************************************* 
  * register_smooth_functions - Register all of your different versions
@@ -310,6 +334,7 @@ void smooth(int dim, pixel *src, pixel *dst)
 void register_smooth_functions() {
     add_smooth_function(&smooth, smooth_descr);
     add_smooth_function(&naive_smooth, naive_smooth_descr);
+    add_smooth_function(&smooth_2, smooth_2_descr);
     /* ... Register additional test functions here */
 }
 
