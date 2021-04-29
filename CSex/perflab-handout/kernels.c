@@ -103,7 +103,7 @@ void rotate_4(int dim, pixel *src, pixel *dst) {
 char rotate_descr_5[] = "rotate_5: Current working version";
 void rotate_5(int dim, pixel *src, pixel *dst){
     int i, j;
-    int tmp1=dim*31, tmp2=dim*(dim-1), tmp3=dim*dim+32, tmp4=dim+31;//定义四个中间变量，
+    int tmp1=dim*31, tmp2=dim*(dim-1), tmp3=dim*dim+32, tmp4=dim+31;//定义四个中间变量
                                                                     //减少循环中的计算次数
     dst+=tmp2;//将数组dst看作地址首，先加dim*(dim-1)
     //破拆for循环，每次执行32步，可以大规模优化程序
