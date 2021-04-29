@@ -102,10 +102,11 @@ void rotate_4(int dim, pixel *src, pixel *dst) {
 
 char rotate_descr_5[] = "rotate_5: Current working version";
 void rotate_5(int dim, pixel *src, pixel *dst){
-    int i,j,tmp1=dim*dim,tmp2=dim *31,tmp3=tmp1-dim,tmp4=tmp1+32,tmp5=dim+31;//定义中间变量
+    int i, j;
+    int tmp1=dim*31, tmp2=dim*(dim-1), tmp3=dim*dim+32, tmp4=dim+31;//定义四个中间变量
     dst+=tmp3;  
     for(i=0; i< dim; i+=32){         
-        for(j=0;j<dim;j++){//将for循环展开，并通过指针的形式实现对图形的翻转，以32为一个步长       
+        for(j=0;j<dim;j++){    
             *dst=*src;
             dst++;src+=dim;
             *dst=*src;
@@ -322,7 +323,7 @@ void smooth_2(int dim, pixel *src, pixel *dst) {
             dst[RIDX(i+3, j+2, dim)] = avg(dim, i+3, j+2, src);
             dst[RIDX(i+3, j+3, dim)] = avg(dim, i+3, j+3, src);
         }
-    }//交换循环的次序
+    }//循环展开
 }//#define RIDX(i,j,n) ((i)*(n)+(j))
 
 
