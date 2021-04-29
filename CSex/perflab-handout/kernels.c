@@ -326,6 +326,46 @@ void smooth_2(int dim, pixel *src, pixel *dst) {
     }//循环展开
 }//#define RIDX(i,j,n) ((i)*(n)+(j))
 
+char smooth_3_descr[] = "smooth1: 消除循环低效率";
+void smooth_3(int dim, pixel *src, pixel *dst) {
+    pixel_sum rowsum[530][530];
+    int i, j, snum;
+    //执行大规模的循环展开，直接对两层循环执行破拆，先处理行再处理列
+    for(i = 0; i < dim; i++) {
+        rowsum[i][0].red=(src[RIDX(i,0,dim)]. red+src[RIDX(i,1,dim)].red);
+        rowsum[i][0].blue=(src[RIDX(i,0,dim)].blue+src[RIDX(i, 1,dim)].blue);
+        rowsum[i][0].green=(src[RIDX(i,0,dim)].green+src[RIDX(i, 1,dim)].green);
+        rowsum[i][0].num = 2;
+        //每一行第一列的值都等于当前行第一列+第二列的颜色值
+        for(j = 1; j < dim-1; j++) {
+            rowsum[i][j].red = (src[RIDX(i, j-1, dim)].red + src[RIDX(i, j, dim)].red + src[RIDX(i, j+1, dim)].red);
+            rowsum[i][j].blue = (src[RIDX(i, j-1, dim)].blue + src[RIDX(i, j, dim)].blue + src[RIDX(i, j+1, dim)].blue);
+            rowsum[i][j].green = (src[RIDX(i, j-1, dim)].green + src[RIDX(i, j, dim)].green + src[RIDX(i, j+1, dim)].green);
+            rowsum[i][j].num = 3;
+        }//第i行第j列(j的范围为0-din-2)的颜色值=当前行第j-1，j，j+1列的值
+        rowsum[i][dim-1].red = (src[RIDX(i,dim-2,dim)].red + src[RIDX(i,dim-1,dim)].red);
+        rowsum[i][dim-1].blue = (src[RIDX(i,dim-2,dim)].blue + src[RIDX(i,dim-1,dim)].blue);
+        rowsum[i][dim-1].green = (src[RIDX(i,dim-2,dim)].green + src[RIDX(i,dim-1,dim)].green);
+        rowsum[i][dim-1].num = 2;
+    }//每一行最后一列的颜色值都等于当前行最后一列和前一列的颜色值
+    for(j = 0; j < dim; j++) {
+        snum = rowsum[0][j].num + rowsum[1][j].num;
+        dst[RIDX(0, j, dim)].red = (unsigned short)((rowsum[0][j].red + rowsum[1][j].red)/snum);
+        dst[RIDX(0, j, dim)].blue = (unsigned short)((rowsum[0][j].blue + rowsum[1][j].blue)/snum);
+        dst[RIDX(0, j, dim)].green = (unsigned short)((rowsum[0][j].green + rowsum[1][j].green)/snum);
+        //让当前列第一行的颜色值等于当前列第一行和第二行的颜色值之和/该处周围的方格数
+        for(i = 0; i < dim - 1; i++) {
+            snum = rowsum[i-1][j].num + rowsum[i][j].num + rowsum[i+1][j].num;
+            dst[RIDX(i, j, dim)].red = (unsigned short)((rowsum[i-1][j].red + rowsum[i][j].red + rowsum[i+1][j].red)/snum);
+            dst[RIDX(i, j, dim)].blue = (unsigned short)((rowsum[i-1][j].blue + rowsum[i][j].blue + rowsum[i+1][j].blue)/snum);
+            dst[RIDX(i, j, dim)].green = (unsigned short)((rowsum[i-1][j].green + rowsum[i][j].green + rowsum[i+1][j].green)/snum);
+        }//让当前列当前行（i的范围为1-dim-2)的颜色值等于当前列第i-1,i,i+1行的颜色值之和/该处周围的方格数
+        snum = rowsum[i-1][j].num + rowsum[dim-2][j].num;
+        dst[RIDX(dim-1, j, dim)].red = (unsigned short)((rowsum[dim-2][j].red + rowsum[dim-1][j].red)/snum);
+        dst[RIDX(dim-1, j, dim)].blue = (unsigned short)((rowsum[dim-2][j].blue + rowsum[dim-1][j].blue)/snum);
+        dst[RIDX(dim-1, j, dim)].green = (unsigned short)((rowsum[dim-2][j].green + rowsum[dim-1][j].green)/snum);
+    }//让当前列最后一行的颜色等于当前列当前行和上一行的颜色之和/该处周围的颜色数
+}
 
 /********************************************************************* 
  * register_smooth_functions - Register all of your different versions
@@ -339,6 +379,7 @@ void register_smooth_functions() {
     add_smooth_function(&smooth, smooth_descr);
     add_smooth_function(&naive_smooth, naive_smooth_descr);
     add_smooth_function(&smooth_2, smooth_2_descr);
+    add_smooth_function(&smooth_3, smooth_3_descr);
     /* ... Register additional test functions here */
 }
 
