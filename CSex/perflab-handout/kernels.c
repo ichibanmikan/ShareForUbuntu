@@ -103,8 +103,11 @@ void rotate_4(int dim, pixel *src, pixel *dst) {
 char rotate_descr_5[] = "rotate_5: Current working version";
 void rotate_5(int dim, pixel *src, pixel *dst){
     int i, j;
-    int tmp1=dim*31, tmp2=dim*(dim-1), tmp3=dim*dim+32, tmp4=dim+31;//定义四个中间变量
-                                                                    //减少循环中的计算次数
+    int tmp1=dim*31;
+    int tmp2=dim*(dim-1);
+    int tmp3=dim*dim+32;
+    int tmp4=dim+31;//定义四个中间变量
+                    //减少循环中的计算次数
     dst+=tmp2;//将数组dst看作地址首，先加dim*(dim-1)
     //破拆for循环，每次执行32步，可以大规模优化程序
     for(i=0; i< dim; i+=32){         
@@ -309,23 +312,20 @@ void smooth_2(int dim, pixel *src, pixel *dst) {
             dst[RIDX(i, j+1, dim)] = avg(dim, i, j+1, src);
             dst[RIDX(i, j+2, dim)] = avg(dim, i, j+2, src);
             dst[RIDX(i, j+3, dim)] = avg(dim, i, j+3, src);
-
             dst[RIDX(i+1, j, dim)] = avg(dim, i+1, j, src);
             dst[RIDX(i+1, j+1, dim)] = avg(dim, i+1, j+1, src);
             dst[RIDX(i+1, j+2, dim)] = avg(dim, i+1, j+2, src);
             dst[RIDX(i+1, j+3, dim)] = avg(dim, i+1, j+3, src);
-
             dst[RIDX(i+2, j, dim)] = avg(dim, i+2, j, src);
             dst[RIDX(i+2, j+1, dim)] = avg(dim, i+2, j+1, src);
             dst[RIDX(i+2, j+2, dim)] = avg(dim, i+2, j+2, src);
             dst[RIDX(i+2, j+3, dim)] = avg(dim, i+2, j+3, src);
-
             dst[RIDX(i+3, j, dim)] = avg(dim, i+3, j, src);
             dst[RIDX(i+3, j+1, dim)] = avg(dim, i+3, j+1, src);
             dst[RIDX(i+3, j+2, dim)] = avg(dim, i+3, j+2, src);
             dst[RIDX(i+3, j+3, dim)] = avg(dim, i+3, j+3, src);
         }
-    }//循环展开
+    }//循环展开 按照4x4分块的方式进行计算
 }//#define RIDX(i,j,n) ((i)*(n)+(j))
 
 char smooth_3_descr[] = "smooth1: 消除循环低效率";
