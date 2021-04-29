@@ -328,7 +328,7 @@ void smooth_2(int dim, pixel *src, pixel *dst) {
     }//循环展开 按照4x4分块的方式进行计算
 }//#define RIDX(i,j,n) ((i)*(n)+(j))
 
-char smooth_3_descr[] = "smooth1: 消除循环低效率";
+char smooth_3_descr[] = "smooth_3: Current working version";
 void smooth_3(int dim, pixel *src, pixel *dst) {
     pixel_sum rowsum[530][530];
     int i, j, snum;
