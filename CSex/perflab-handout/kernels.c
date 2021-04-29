@@ -297,6 +297,7 @@ void smooth(int dim, pixel *src, pixel *dst)
     naive_smooth(dim, src, dst);
 }
 
+char smooth_2_descr[] = "smooth_2: Current working version";
 void smooth_2(int dim, pixel *src, pixel *dst) {
     int i, j;
     for (j = 0; j < dim; j+=4){
@@ -333,6 +334,7 @@ void smooth_2(int dim, pixel *src, pixel *dst) {
 void register_smooth_functions() {
     add_smooth_function(&smooth, smooth_descr);
     add_smooth_function(&naive_smooth, naive_smooth_descr);
+    add_smooth_function(&smooth_2, smooth_2_descr);
     /* ... Register additional test functions here */
 }
 
