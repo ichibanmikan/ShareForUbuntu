@@ -332,7 +332,7 @@ char smooth_3_descr[] = "smooth_3: Current working version";
 void smooth_3(int dim, pixel *src, pixel *dst) {
     pixel_sum rowsum[530][530];
     int i, j, snum;
-    //执行大规模的循环展开，直接对两层循环执行破拆，先处理行再处理列
+    //执行大规模的循环展开，直接对两层循环执行破拆，减少avg函数的调用，此时先处理行再处理列
     for(i = 0; i < dim; i++) {
         rowsum[i][0].red=(src[RIDX(i,0,dim)]. red+src[RIDX(i,1,dim)].red);
         rowsum[i][0].blue=(src[RIDX(i,0,dim)].blue+src[RIDX(i, 1,dim)].blue);
