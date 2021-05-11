@@ -1,4 +1,4 @@
-
+~~~assembly
 bomb:     file format elf32-i386
 
 
@@ -1832,3 +1832,11 @@ Disassembly of section .fini:
  804a071:	83 c4 08             	add    $0x8,%esp
  804a074:	5b                   	pop    %ebx
  804a075:	c3                   	ret    
+
+```
+
+```
+
+
+~~~
+
