@@ -474,7 +474,7 @@ Disassembly of section .text:
  8048d01:	e8 6a fb ff ff       	call   8048870 <__isoc99_sscanf@plt>
  8048d06:	83 f8 02             	cmp    $0x2,%eax
  8048d09:	75 0e                	jne    8048d19 <phase_4+0x3a>
- 8048d0b:	8b 44 24 18          	mov    0x18(%esp),%eax
+ 8048d0b:	8b 44 24 18          	mov    0x18(%esp),%eax #变量2
  8048d0f:	83 f8 01             	cmp    $0x1,%eax
  8048d12:	7e 05                	jle    8048d19 <phase_4+0x3a>
  8048d14:	83 f8 04             	cmp    $0x4,%eax
@@ -532,29 +532,32 @@ Disassembly of section .text:
  8048dc1:	56                   	push   %esi
  8048dc2:	53                   	push   %ebx
  8048dc3:	83 ec 44             	sub    $0x44,%esp
- 8048dc6:	8d 44 24 10          	lea    0x10(%esp),%eax
- 8048dca:	89 44 24 04          	mov    %eax,0x4(%esp)
- 8048dce:	8b 44 24 50          	mov    0x50(%esp),%eax
+ 8048dc6:	8d 44 24 10          	lea    0x10(%esp),%eax 
+ 8048dca:	89 44 24 04          	mov    %eax,0x4(%esp) #指针型变量1
+ 8048dce:	8b 44 24 50          	mov    0x50(%esp),%eax 
  8048dd2:	89 04 24             	mov    %eax,(%esp)
  8048dd5:	e8 61 04 00 00       	call   804923b <read_six_numbers>
  8048dda:	be 00 00 00 00       	mov    $0x0,%esi
+ 
  8048ddf:	8b 44 b4 10          	mov    0x10(%esp,%esi,4),%eax
- 8048de3:	83 e8 01             	sub    $0x1,%eax
+ 8048de3:	83 e8 01             	sub    $0x1,%eax  
  8048de6:	83 f8 05             	cmp    $0x5,%eax
  8048de9:	76 05                	jbe    8048df0 <phase_6+0x2f>
  8048deb:	e8 16 03 00 00       	call   8049106 <explode_bomb>
- 8048df0:	83 c6 01             	add    $0x1,%esi
+ 8048df0:	83 c6 01             	add    $0x1,%esi #1
  8048df3:	83 fe 06             	cmp    $0x6,%esi
  8048df6:	74 33                	je     8048e2b <phase_6+0x6a>
- 8048df8:	89 f3                	mov    %esi,%ebx
- 8048dfa:	8b 44 9c 10          	mov    0x10(%esp,%ebx,4),%eax
+ 8048df8:	89 f3                	mov    %esi,%ebx #1
+ 
+ 8048dfa:	8b 44 9c 10          	mov    0x10(%esp,%ebx,4),%eax #1
  8048dfe:	39 44 b4 0c          	cmp    %eax,0xc(%esp,%esi,4)
  8048e02:	75 05                	jne    8048e09 <phase_6+0x48>
  8048e04:	e8 fd 02 00 00       	call   8049106 <explode_bomb>
  8048e09:	83 c3 01             	add    $0x1,%ebx
  8048e0c:	83 fb 05             	cmp    $0x5,%ebx
- 8048e0f:	7e e9                	jle    8048dfa <phase_6+0x39>
- 8048e11:	eb cc                	jmp    8048ddf <phase_6+0x1e>
+ 8048e0f:	7e e9                	jle    8048dfa <phase_6+0x39> #循环判断输入的6个数下一个数不能和上一个数相等
+ 8048e11:	eb cc                	jmp    8048ddf <phase_6+0x1e> #二重循环，输入的数不能超6不能小0
+ 
  8048e13:	8b 52 08             	mov    0x8(%edx),%edx
  8048e16:	83 c0 01             	add    $0x1,%eax
  8048e19:	39 c8                	cmp    %ecx,%eax
@@ -584,6 +587,7 @@ Disassembly of section .text:
  8048e67:	8b 44 24 3c          	mov    0x3c(%esp),%eax
  8048e6b:	89 42 08             	mov    %eax,0x8(%edx)
  8048e6e:	c7 40 08 00 00 00 00 	movl   $0x0,0x8(%eax)
+ 
  8048e75:	be 05 00 00 00       	mov    $0x5,%esi
  8048e7a:	8b 43 08             	mov    0x8(%ebx),%eax
  8048e7d:	8b 10                	mov    (%eax),%edx
@@ -593,6 +597,7 @@ Disassembly of section .text:
  8048e88:	8b 5b 08             	mov    0x8(%ebx),%ebx
  8048e8b:	83 ee 01             	sub    $0x1,%esi
  8048e8e:	75 ea                	jne    8048e7a <phase_6+0xb9>
+ 
  8048e90:	83 c4 44             	add    $0x44,%esp
  8048e93:	5b                   	pop    %ebx
  8048e94:	5e                   	pop    %esi
