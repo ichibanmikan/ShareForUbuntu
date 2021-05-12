@@ -369,6 +369,109 @@ void smooth_3(int dim, pixel *src, pixel *dst) {
     }//让当前列最后一行的颜色等于当前列当前行和上一行的颜色之和/该处周围的颜色数
 }
 
+char smooth_4_descr[] = "smooth_4: Current working version";
+void smooth_4(int dim, pixel *src, pixel *dst){
+    int i, j;
+    int ii, jj;
+    pixel_sum sum;
+    pixel current_pixel;
+    for (i = 0; i < dim; i++){
+        for (j = 0; j < dim; j++){
+            sum.red = sum.green = sum.blue = sum.num = 0;
+            for(ii = max(i-1, 0); ii <= min(i+1, dim-1); ii++){
+                for(jj = max(j-1, 0); jj <= min(j+1, dim-1); jj++){ 
+                    sum.red += (int) src[ii*dim+jj].red;
+                    sum.green += (int) src[ii*dim+jj].green;
+                    sum.blue += (int) src[ii*dim+jj].blue;
+                    sum.num++;
+                }
+            }
+            current_pixel.red = (unsigned short) (sum.red/sum.num);
+            current_pixel.green = (unsigned short) (sum.green/sum.num);
+            current_pixel.blue = (unsigned short) (sum.blue/sum.num);
+            dst[i*dim+j] =current_pixel;
+        }
+    }//仍然将avg函数展开
+}
+
+char smooth_5_descr[] = "smooth_5: Current working version";
+void smooth_5(int dim, pixel *src, pixel *dst){
+    int i,j; 
+    int dim0=dim; 
+    int dim1=dim-1;  
+    int dim2=dim-2;
+    pixel *P1, *P2, *P3; 
+    pixel *dst1; 
+    P1=src; 
+    P2=P1+dim0;//处理左上角像素      
+    dst->red=(P1->red+(P1+1)->red+P2->red+(P2+1)->red)>>2; 
+    dst->green=(P1->green+(P1+1)->green+P2->green+(P2+1)->green)>>2; 
+    dst->blue=(P1->blue+(P1+1)->blue+P2->blue+(P2+1)->blue)>>2; 
+    dst++;//处理上边界
+    for(i=1;i<dim1;i++)  {    
+        dst->red=(P1->red+(P1+1)->red+(P1+2)->red+P2->red+(P2+1)->red+(P2+2)->red)/6;  
+        dst->green=(P1->green+(P1+1)->green+(P1+2)->green+P2->green+(P2+1)->green+(P2+2)->green)/6;   
+        dst->blue=(P1->blue+(P1+1)->blue+(P1+2)->blue+P2->blue+(P2+1)->blue+(P2+2)->blue)/6;  
+        dst++;  
+        P1++;  
+        P2++; 
+    }//处理右上角像素
+    dst->red=(P1->red+(P1+1)->red+P2->red+(P2+1)->red)>>2; 
+    dst->green=(P1->green+(P1+1)->green+P2->green+(P2+1)->green)>>2; 
+    dst->blue=(P1->blue+(P1+1)->blue+P2->blue+(P2+1)->blue)>>2; 
+    dst++; 
+    P1=src; 
+    P2=P1+dim0; 
+    P3=P2+dim0;//左边界处理
+    for(i=1;i<dim1;i++){    
+        dst->red=(P1->red+(P1+1)->red+P2->red+(P2+1)->red+P3->red+(P3+1)->red)/6;    
+        dst->green=(P1->green+(P1+1)->green+P2->green+(P2+1)->green+P3->green+(P3+1)->green)/6;   
+        dst->blue=(P1->blue+(P1+1)->blue+P2->blue+(P2+1)->blue+P3->blue+(P3+1)->blue)/6;  
+        dst++;     
+        dst1=dst+1;   
+        for(j=1;j<dim2;j+=2){         
+            dst->red=(P1->red+(P1+1)->red+(P1+2)->red+P2->red+(P2+1)->red+(P2+2)->red+P3->red+(P3+1)->red+(P3+2)->red)/9;
+            dst->green=(P1->green+(P1+1)->green+(P1+2)->green+P2->green+(P2+1)->green+(P2+2)->green+P3->green+(P3+1)->green+(P3+2)->green)/9;          
+            dst->blue=(P1->blue+(P1+1)->blue+(P1+2)->blue+P2->blue+(P2+1)->blue+(P2+2)->blue+P3->blue+(P3+1)->blue+(P3+2)->blue)/9;            
+            dst1->red=((P1+3)->red+(P1+1)->red+(P1+2)->red+(P2+3)->red+(P2+1)->red+(P2+2)->red+(P3+3)->red+(P3+1)->red+(P3+2)->red)/9;           
+            dst1->green=((P1+3)->green+(P1+1)->green+(P1+2)->green+(P2+3)->green+(P2+1)->green+(P2+2)->green+(P3+3)->green+(P3+1)->green+(P3+2)->green)/9;           
+            dst1->blue=((P1+3)->blue+(P1+1)->blue+(P1+2)->blue+(P2+3)->blue+(P2+1)->blue+(P2+2)->blue+(P3+3)->blue+(P3+1)->blue+(P3+2)->blue)/9;       
+            dst+=2;dst1+=2;P1+=2;P2+=2;P3+=2;         
+        }//主体中间部分处理       
+        for(;j<dim1;j++){         
+            dst->red=(P1->red+(P1+1)->red+(P1+2)->red+P2->red+(P2+1)->red+(P2+2)->red+P3->red+(P3+1)->red+(P3+2)->red)/9;        
+            dst->green=(P1->green+(P1+1)->green+(P1+2)->green+P2->green+(P2+1)->green+(P2+2)->green+P3->green+(P3+1)->green+(P3+2)->green)/9;        
+            dst->blue=(P1->blue+(P1+1)->blue+(P1+2)->blue+P2->blue+(P2+1)->blue+(P2+2)->blue+P3->blue+(P3+1)->blue+(P3+2)->blue)/9;      
+            dst++;
+            P1++;
+            P2++;
+            P3++;     
+        }//同时处理2个像素 
+        dst->red=(P1->red+(P1+1)->red+P2->red+(P2+1)->red+P3->red+(P3+1)->red)/6;      
+        dst->green=(P1->green+(P1+1)->green+P2->green+(P2+1)->green+P3->green+(P3+1)->green)/6;     
+        dst->blue=(P1->blue+(P1+1)->blue+P2->blue+(P2+1)->blue+P3->blue+(P3+1)->blue)/6;     
+        dst++;
+        P1+=2;
+        P2+=2;
+        P3+=2;//处理右侧边界
+    }    
+    dst->red=(P1->red+(P1+1)->red+P2->red+(P2+1)->red)>>2;     
+    dst->green=(P1->green+(P1+1)->green+P2->green+(P2+1)->green)>>2;    
+    dst->blue=(P1->blue+(P1+1)->blue+P2->blue+(P2+1)->blue)>>2;
+    dst++;//处理左下角 
+    for(i=1;i<dim1;i++){       
+        dst->red=(P1->red+(P1+1)->red+(P1+2)->red+P2->red+(P2+1)->red+(P2+2)->red)/6;       
+        dst->green=(P1->green+(P1+1)->green+(P1+2)->green+P2->green+(P2+1)->green+(P2+2)->green)/6;       
+        dst->blue=(P1->blue+(P1+1)->blue+(P1+2)->blue+P2->blue+(P2+1)->blue+(P2+2)->blue)/6;     
+        dst++;
+        P1++;
+        P2++;    
+    }//处理下边界
+    dst->red=(P1->red+(P1+1)->red+P2->red+(P2+1)->red)>>2;     
+    dst->green=(P1->green+(P1+1)->green+P2->green+(P2+1)->green)>>2;    
+    dst->blue=(P1->blue+(P1+1)->blue+P2->blue+(P2+1)->blue)>>2;//处理右下角像素  
+}
+
 /********************************************************************* 
  * register_smooth_functions - Register all of your different versions
  *     of the smooth kernel with the driver by calling the
@@ -382,6 +485,8 @@ void register_smooth_functions() {
     add_smooth_function(&naive_smooth, naive_smooth_descr);
     add_smooth_function(&smooth_2, smooth_2_descr);
     add_smooth_function(&smooth_3, smooth_3_descr);
+    add_smooth_function(&smooth_4, smooth_4_descr);
+    add_smooth_function(&smooth_5, smooth_5_descr);
     /* ... Register additional test functions here */
 }
 
