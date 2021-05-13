@@ -392,7 +392,7 @@ void smooth_4(int dim, pixel *src, pixel *dst){
             dst[i*dim+j] =current_pixel;
         }
     }//仍然将avg函数展开
-}
+}//减少一次函数的调用
 
 char smooth_5_descr[] = "smooth_5: Current working version";
 void smooth_5(int dim, pixel *src, pixel *dst){
@@ -470,7 +470,7 @@ void smooth_5(int dim, pixel *src, pixel *dst){
     dst->red=(P1->red+(P1+1)->red+P2->red+(P2+1)->red)>>2;     
     dst->green=(P1->green+(P1+1)->green+P2->green+(P2+1)->green)>>2;    
     dst->blue=(P1->blue+(P1+1)->blue+P2->blue+(P2+1)->blue)>>2;//处理右下角像素  
-}
+}//减少一次函数的调用
 
 /********************************************************************* 
  * register_smooth_functions - Register all of your different versions
