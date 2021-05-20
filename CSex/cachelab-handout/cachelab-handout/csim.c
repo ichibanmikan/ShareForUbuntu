@@ -149,16 +149,13 @@ void updateLruNumber(Sim_Cache *sim_cache,int setBits,int hitIndex){
 }//updateLruNumber更新LruNumber
 
 /* 查找某组中当前最小的LruNumber行，作为牺牲行 */
-int findMinLruNumber(Sim_Cache *sim_cache,int setBits) 
-{
+int findMinLruNumber(Sim_Cache *sim_cache,int setBits){
 	int i,t;
 	int minIndex=0;
 	int minLru=MAX_NUM;
-	for(i=0; i<sim_cache->LineNumber; i++) 
-	{
+	for(i=0; i<sim_cache->LineNumber; i++) {
 		t=sim_cache->sets[setBits].lines[i].LruNumber;
-		if(t<minLru) 
-		{
+		if(t<minLru) {
 			minIndex=i;
 			minLru=t;
 		}
@@ -201,7 +198,6 @@ int updateCache(Sim_Cache *sim_cache,int setBits,int tagBits) {
 	return isfull;//0未满
 }//updateCache更新高速缓存数据
 
-/*验证LRU运行相关函数*/
 int runLru(Sim_Cache *sim_cache,int setBits,int tagBits) {
 	if(isMiss(sim_cache,setBits,tagBits))
 		updateCache(sim_cache,setBits,tagBits);
