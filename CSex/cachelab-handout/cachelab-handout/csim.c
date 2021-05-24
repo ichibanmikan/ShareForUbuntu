@@ -173,7 +173,7 @@ int isMiss(Sim_Cache *sim_cache,int setBits,int tagBits){
 		}
 	}
 	return isMiss;
-}//isMiss判断是否命中
+}//isMiss判断是否命中  
 
 int updateCache(Sim_Cache *sim_cache,int setBits,int tagBits) {
 	int i;
