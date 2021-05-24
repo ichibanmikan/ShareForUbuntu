@@ -1,23 +1,8 @@
-/*
- * trans.c - Matrix transpose B = A^T
- *
- * Each transpose function must have a prototype of the form:
- * void trans(int M, int N, int A[N][M], int B[M][N]);
- *
- * A transpose function is evaluated by counting the number of misses
- * on a 1KB direct mapped cache with a block size of 32 bytes.
- */
 #include <stdio.h>
 #include "cachelab.h"
 int is_transpose(int M, int N, int A[N][M], int B[M][N]);
 
-/*
- * transpose_submit - This is the solution transpose function that you
- *     will be graded on for Part B of the assignment. Do not change
- *     the description string "Transpose submission", as the driver
- *     searches for that string to identify the transpose function to
- *     be graded.
- */
+
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 	int i ,j, x, y;

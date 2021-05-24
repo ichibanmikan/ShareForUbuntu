@@ -251,12 +251,16 @@ int main(int argc, char *argv[]) {
 	FILE *tracefile=fopen(tracefileName,"r");
 
 	while(fscanf(tracefile,"%s %x,%d",opt,&addr,&size)!=EOF){
+		if(strcmp(opt,"1")==0)continue;
 		int setBits=getSet(addr,s,b);
 		int tagBits=getTag(addr,s,b);
-		if(isVerbose==1)printf("setBits:%x  tagBits:%x\n",setBits,tagBits);
+		printf("setBits:%x  tagBits:%x\n",setBits,tagBits);
 		if(isVerbose==1)printf("%s %x,%d",opt,addr,size);
 		if(strcmp(opt,"S")==0){
 			storeData(&cache,addr,size,setBits,tagBits,isVerbose);
+		}
+		if(strcmp(opt,"M")==0){
+			modifyData(&cache,addr,size,setBits,tagBits,isVerbose);
 		}
 		if(strcmp(opt,"L")==0){
 			loadData(&cache,addr,size,setBits,tagBits,isVerbose);
@@ -265,25 +269,6 @@ int main(int argc, char *argv[]) {
 			printf("\n");
 		}
 	}	
-	// while(fscanf(tracefile,"%s %x,%d",opt,&addr,&size)!=EOF){
-	// 	if(strcmp(opt,"1")==0)continue;
-	// 	int setBits=getSet(addr,s,b);
-	// 	int tagBits=getTag(addr,s,b);
-	// 	printf("setBits:%x  tagBits:%x\n",setBits,tagBits);
-	// 	if(isVerbose==1)printf("%s %x,%d",opt,addr,size);
-	// 	if(strcmp(opt,"S")==0){
-	// 		storeData(&cache,addr,size,setBits,tagBits,isVerbose);
-	// 	}
-	// 	if(strcmp(opt,"M")==0){
-	// 		modifyData(&cache,addr,size,setBits,tagBits,isVerbose);
-	// 	}
-	// 	if(strcmp(opt,"L")==0){
-	// 		loadData(&cache,addr,size,setBits,tagBits,isVerbose);
-	// 	}
-	// 	if(isVerbose==1){
-	// 		printf("\n");
-	// 	}
-	// }	
 	/*step3用： 用户补充检验代码 */
 
 
@@ -293,5 +278,3 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-
-
