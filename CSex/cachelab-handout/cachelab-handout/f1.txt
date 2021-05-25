@@ -1,0 +1,38 @@
+setBits:7  tagBits:640 S 1900ec,1 miss 
+setBits:9  tagBits:640 L 190120,8 miss 
+setBits:7  tagBits:640 L 1900e4,4 hit 
+setBits:7  tagBits:640 L 1900e0,4 hit 
+setBits:7  tagBits:440 L 1100e0,4 miss  eviction 
+setBits:7  tagBits:540 S 1500e0,4 miss  eviction 
+setBits:7  tagBits:440 L 1100e4,4 miss  eviction 
+setBits:7  tagBits:540 S 1500f0,4 miss  eviction 
+setBits:7  tagBits:440 L 1100e8,4 miss  eviction 
+setBits:8  tagBits:540 S 150100,4 miss 
+setBits:7  tagBits:440 L 1100ec,4 hit 
+setBits:8  tagBits:540 S 150110,4 hit 
+setBits:7  tagBits:440 L 1100f0,4 hit 
+setBits:7  tagBits:540 S 1500e4,4 miss  eviction 
+setBits:7  tagBits:440 L 1100f4,4 miss  eviction 
+setBits:7  tagBits:540 S 1500f4,4 miss  eviction 
+setBits:7  tagBits:440 L 1100f8,4 miss  eviction 
+setBits:8  tagBits:540 S 150104,4 hit 
+setBits:7  tagBits:440 L 1100fc,4 hit 
+setBits:8  tagBits:540 S 150114,4 hit 
+setBits:8  tagBits:440 L 110100,4 miss  eviction 
+setBits:7  tagBits:540 S 1500e8,4 miss  eviction 
+setBits:8  tagBits:440 L 110104,4 hit 
+setBits:7  tagBits:540 S 1500f8,4 hit 
+setBits:8  tagBits:440 L 110108,4 hit 
+setBits:8  tagBits:540 S 150108,4 miss  eviction 
+setBits:8  tagBits:440 L 11010c,4 miss  eviction 
+setBits:8  tagBits:540 S 150118,4 miss  eviction 
+setBits:8  tagBits:440 L 110110,4 miss  eviction 
+setBits:7  tagBits:540 S 1500ec,4 hit 
+setBits:8  tagBits:440 L 110114,4 hit 
+setBits:7  tagBits:540 S 1500fc,4 hit 
+setBits:8  tagBits:440 L 110118,4 hit 
+setBits:8  tagBits:540 S 15010c,4 miss  eviction 
+setBits:8  tagBits:440 L 11011c,4 miss  eviction 
+setBits:8  tagBits:540 S 15011c,4 miss  eviction 
+setBits:7  tagBits:640 S 1900ed,1 miss  eviction 
+hits:15 misses:22 evictions:19

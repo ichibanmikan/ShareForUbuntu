@@ -218,15 +218,15 @@ void loadData(Sim_Cache *sim_cache,int addr,int size,int setBits,int tagBits,int
 	if(isMiss(sim_cache,setBits,tagBits)==1){
 		misses++;
 		if(isVerbose==1)
-			printf("miss ");
+			printf(" miss ");
 		if(updateCache(sim_cache,setBits,tagBits)==1){
 			evictions++;
-			if(isVerbose==1)printf("eviction "); 
+			if(isVerbose==1)printf(" eviction "); 
 		} //该组需要牺牲行
   	}//没有命中
 	else{
 		hits++;
-		if(isVerbose==1)printf("hit ");
+		if(isVerbose==1)printf(" hit ");
 	}
 }//L操作(数据加载操作) 
 void storeData(Sim_Cache *sim_cache,int addr,int size,int setBits,int tagBits,int isVerbose){
@@ -254,11 +254,11 @@ int main(int argc, char *argv[]) {
 		if(strcmp(opt,"1")==0)continue;
 		int setBits=getSet(addr,s,b);
 		int tagBits=getTag(addr,s,b);
-		printf("setBits:%x  tagBits:%x\n",setBits,tagBits);
+		printf("setBits:%x  tagBits:%x ",setBits,tagBits);
 		if(isVerbose==1)printf("%s %x,%d",opt,addr,size);
 		if(strcmp(opt,"S")==0){
 			storeData(&cache,addr,size,setBits,tagBits,isVerbose);
-		}
+		} 
 		if(strcmp(opt,"M")==0){
 			modifyData(&cache,addr,size,setBits,tagBits,isVerbose);
 		}

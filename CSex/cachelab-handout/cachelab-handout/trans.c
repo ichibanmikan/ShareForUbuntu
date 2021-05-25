@@ -22,6 +22,11 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 		return ;
 	}
 	else if(N==32&&M==32){
+		// for(i=0; i<N; i++){
+		// 	for (j=0;j<M;j++){
+		// 		B[j][i]=A[i][j];
+		// 	}
+		// }
 		for(i=0;i<N;i+=8){
 			for(j=0;j<M;j+=8){
 				if(i==j){
@@ -83,11 +88,11 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 					B[x+7][j+4]=B[x+4][j+7];B[x+7][j+5]=B[x+5][j+7];B[x+7][j+6]=B[x+6][j+7];
 					B[x][j+7]=x1;B[x+1][j+7]=x2;B[x+2][j+7]=x3;B[x+3][j+7]=x4;B[x+4][j+7]=x5;B[x+5][j+7]=x6;B[x+6][j+7]=x7;
 					B[x+7][j+7]=x8;
-				}
-				else
-				for(x=i;x<i+8;x++){
-					for(y=j;y<j+8;y++){
-						B[y][x]=A[x][y];
+				}else{
+					for(x=i;x<i+8;x++){
+						for(y=j;y<j+8;y++){
+							B[y][x]=A[x][y];
+						}
 					}
 				}
 			}
@@ -225,11 +230,9 @@ void registerFunctions()
 {
     /* Register your solution function */
     registerTransFunction(transpose_submit, transpose_submit_desc);
-
-	registerTransFunction(transpose_submit_of_32 ,transpose_submit_of_32_desc);
-	registerTransFunction(transpose_submit_of_64 ,transpose_submit_of_64_desc);
-	registerTransFunction(transpose_submit_of_67x61 ,transpose_submit_of_67x61_desc);
-    /* Register any additional transpose functions */
+	// registerTransFunction(transpose_submit_of_32 ,transpose_submit_of_32_desc);
+	// registerTransFunction(transpose_submit_of_64 ,transpose_submit_of_64_desc);
+	// registerTransFunction(transpose_submit_of_67x61 ,transpose_submit_of_67x61_desc);
     registerTransFunction(trans, trans_desc);
 }
 
