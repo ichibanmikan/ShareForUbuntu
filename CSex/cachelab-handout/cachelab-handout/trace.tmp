@@ -1,46 +1,46 @@
-==8859== Lackey, an example Valgrind tool
-==8859== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote.
-==8859== Using Valgrind-3.15.0-608cb11914-20190413 and LibVEX; rerun with -h for copyright info
-==8859== Command: ./tracegen -M 4 -N 4 -F 1
-==8859== 
---8859-- Valgrind options:
---8859--    --tool=lackey
---8859--    --trace-mem=yes
---8859--    --log-fd=1
---8859--    -v
---8859-- Contents of /proc/version:
---8859--   Linux version 5.8.0-53-generic (buildd@lcy01-amd64-012) (gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #60~20.04.1-Ubuntu SMP Thu May 6 09:52:46 UTC 2021
---8859-- 
---8859-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-rdrand
---8859-- Page sizes: currently 4096, max supported 4096
---8859-- Valgrind library directory: /usr/lib/x86_64-linux-gnu/valgrind
---8859-- Reading syms from /home/ichibanmikan/ShareForUbuntu/CSex/cachelab-handout/cachelab-handout/tracegen
---8859-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-2.31.so
---8859--   Considering /usr/lib/x86_64-linux-gnu/ld-2.31.so ..
---8859--   .. CRC mismatch (computed 975d0390 wanted 30bd717f)
---8859--   Considering /lib/x86_64-linux-gnu/ld-2.31.so ..
---8859--   .. CRC mismatch (computed 975d0390 wanted 30bd717f)
---8859--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/ld-2.31.so ..
---8859--   .. CRC is valid
---8859-- Reading syms from /usr/lib/x86_64-linux-gnu/valgrind/lackey-amd64-linux
---8859--    object doesn't have a symbol table
---8859--    object doesn't have a dynamic symbol table
---8859-- Scheduler: using generic scheduler lock implementation.
-==8859== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-8859-by-ichibanmikan-on-???
-==8859== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-8859-by-ichibanmikan-on-???
-==8859== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-8859-by-ichibanmikan-on-???
-==8859== 
-==8859== TO CONTROL THIS PROCESS USING vgdb (which you probably
-==8859== don't want to do, unless you know exactly what you're doing,
-==8859== or are doing some strange experiment):
-==8859==   /usr/lib/x86_64-linux-gnu/valgrind/../../bin/vgdb --pid=8859 ...command...
-==8859== 
-==8859== TO DEBUG THIS PROCESS USING GDB: start GDB like this
-==8859==   /path/to/gdb ./tracegen
-==8859== and then give GDB the following command
-==8859==   target remote | /usr/lib/x86_64-linux-gnu/valgrind/../../bin/vgdb --pid=8859
-==8859== --pid is optional if only one valgrind process is running
-==8859== 
+==9830== Lackey, an example Valgrind tool
+==9830== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote.
+==9830== Using Valgrind-3.15.0-608cb11914-20190413 and LibVEX; rerun with -h for copyright info
+==9830== Command: ./tracegen -M 4 -N 4 -F 1
+==9830== 
+--9830-- Valgrind options:
+--9830--    --tool=lackey
+--9830--    --trace-mem=yes
+--9830--    --log-fd=1
+--9830--    -v
+--9830-- Contents of /proc/version:
+--9830--   Linux version 5.8.0-53-generic (buildd@lcy01-amd64-012) (gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #60~20.04.1-Ubuntu SMP Thu May 6 09:52:46 UTC 2021
+--9830-- 
+--9830-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-rdrand
+--9830-- Page sizes: currently 4096, max supported 4096
+--9830-- Valgrind library directory: /usr/lib/x86_64-linux-gnu/valgrind
+--9830-- Reading syms from /home/ichibanmikan/ShareForUbuntu/CSex/cachelab-handout/cachelab-handout/tracegen
+--9830-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-2.31.so
+--9830--   Considering /usr/lib/x86_64-linux-gnu/ld-2.31.so ..
+--9830--   .. CRC mismatch (computed 975d0390 wanted 30bd717f)
+--9830--   Considering /lib/x86_64-linux-gnu/ld-2.31.so ..
+--9830--   .. CRC mismatch (computed 975d0390 wanted 30bd717f)
+--9830--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/ld-2.31.so ..
+--9830--   .. CRC is valid
+--9830-- Reading syms from /usr/lib/x86_64-linux-gnu/valgrind/lackey-amd64-linux
+--9830--    object doesn't have a symbol table
+--9830--    object doesn't have a dynamic symbol table
+--9830-- Scheduler: using generic scheduler lock implementation.
+==9830== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-9830-by-ichibanmikan-on-???
+==9830== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-9830-by-ichibanmikan-on-???
+==9830== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-9830-by-ichibanmikan-on-???
+==9830== 
+==9830== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==9830== don't want to do, unless you know exactly what you're doing,
+==9830== or are doing some strange experiment):
+==9830==   /usr/lib/x86_64-linux-gnu/valgrind/../../bin/vgdb --pid=9830 ...command...
+==9830== 
+==9830== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==9830==   /path/to/gdb ./tracegen
+==9830== and then give GDB the following command
+==9830==   target remote | /usr/lib/x86_64-linux-gnu/valgrind/../../bin/vgdb --pid=9830
+==9830== --pid is optional if only one valgrind process is running
+==9830== 
 I  04001100,3
 I  04001103,5
  S 1ffeffff88,8
@@ -40244,8 +40244,8 @@ I  0401f169,3
 I  0401f16c,3
 I  0401f16f,5
 I  0401f174,2
---8859-- Reading syms from /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_core-amd64-linux.so
---8859--    object doesn't have a symbol table
+--9830-- Reading syms from /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_core-amd64-linux.so
+--9830--    object doesn't have a symbol table
 I  0401f176,6
 I  0401f17c,2
 I  0401f17e,1
@@ -48033,13 +48033,13 @@ I  0401f169,3
 I  0401f16c,3
 I  0401f16f,5
 I  0401f174,2
---8859-- Reading syms from /usr/lib/x86_64-linux-gnu/libc-2.31.so
---8859--   Considering /usr/lib/x86_64-linux-gnu/libc-2.31.so ..
---8859--   .. CRC mismatch (computed 86b78530 wanted e380f01c)
---8859--   Considering /lib/x86_64-linux-gnu/libc-2.31.so ..
---8859--   .. CRC mismatch (computed 86b78530 wanted e380f01c)
---8859--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libc-2.31.so ..
---8859--   .. CRC is valid
+--9830-- Reading syms from /usr/lib/x86_64-linux-gnu/libc-2.31.so
+--9830--   Considering /usr/lib/x86_64-linux-gnu/libc-2.31.so ..
+--9830--   .. CRC mismatch (computed 86b78530 wanted e380f01c)
+--9830--   Considering /lib/x86_64-linux-gnu/libc-2.31.so ..
+--9830--   .. CRC mismatch (computed 86b78530 wanted e380f01c)
+--9830--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libc-2.31.so ..
+--9830--   .. CRC is valid
 I  0401f176,6
 I  0401f17c,2
 I  0401f17e,1
@@ -288660,22 +288660,22 @@ I  0492e2a8,2
 I  0492e2bf,2
 I  0492e2c1,3
 I  0492e2c4,2
-==8859== 
-==8859== Counted 1 call to main()
-==8859== 
-==8859== Jccs:
-==8859==   total:         43,792
-==8859==   taken:         16,086 (37%)
-==8859== 
-==8859== Executed:
-==8859==   SBs entered:   44,157
-==8859==   SBs completed: 31,871
-==8859==   guest instrs:  222,422
-==8859==   IRStmts:       1,308,185
-==8859== 
-==8859== Ratios:
-==8859==   guest instrs : SB entered  = 50 : 10
-==8859==        IRStmts : SB entered  = 296 : 10
-==8859==        IRStmts : guest instr = 58 : 10
-==8859== 
-==8859== Exit code:       0
+==9830== 
+==9830== Counted 1 call to main()
+==9830== 
+==9830== Jccs:
+==9830==   total:         43,792
+==9830==   taken:         16,086 (37%)
+==9830== 
+==9830== Executed:
+==9830==   SBs entered:   44,157
+==9830==   SBs completed: 31,871
+==9830==   guest instrs:  222,422
+==9830==   IRStmts:       1,308,185
+==9830== 
+==9830== Ratios:
+==9830==   guest instrs : SB entered  = 50 : 10
+==9830==        IRStmts : SB entered  = 296 : 10
+==9830==        IRStmts : guest instr = 58 : 10
+==9830== 
+==9830== Exit code:       0
