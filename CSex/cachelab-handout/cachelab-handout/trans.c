@@ -202,12 +202,10 @@ void transpose_submit_of_67x61(int M,int N,int A[N][M],int B[M][N]){
  * trans - A simple baseline transpose function, not optimized for the cache.
  */
 char trans_desc[] = "Simple row-wise scan transpose";
-void trans(int M, int N, int A[N][M], int B[M][N])
-{
+void trans(int M, int N, int A[N][M], int B[M][N]){
     int i, j, tmp;
-
-    for (i = 0; i < N; i++) {
-        for (j = 0; j < M; j++) {
+    for (i = 0; i < N; i++){
+        for (j = 0; j < M; j++){
 			tmp = A[i][j];
 			B[j][i]=tmp;
         }
@@ -221,11 +219,9 @@ void trans(int M, int N, int A[N][M], int B[M][N])
  *     performance. This is a handy way to experiment with different
  *     transpose strategies.
  */
-void registerFunctions()
-{
+void registerFunctions(){
     /* Register your solution function */
     registerTransFunction(transpose_submit, transpose_submit_desc);
-
 	registerTransFunction(transpose_submit_of_32 ,transpose_submit_of_32_desc);
 	registerTransFunction(transpose_submit_of_64 ,transpose_submit_of_64_desc);
 	registerTransFunction(transpose_submit_of_67x61 ,transpose_submit_of_67x61_desc);
@@ -238,8 +234,7 @@ void registerFunctions()
  *     A. You can check the correctness of your transpose by calling
  *     it before returning from the transpose function.
  */
-int is_transpose(int M, int N, int A[N][M], int B[M][N])
-{
+int is_transpose(int M, int N, int A[N][M], int B[M][N]){
     int i, j;
 
     for (i = 0; i < N; i++) {
