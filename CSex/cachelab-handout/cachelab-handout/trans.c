@@ -269,7 +269,7 @@ void registerFunctions(){
 	// 	registerTransFunction(transpose_submit_of_67x61 ,transpose_submit_of_67x61_desc);
 	//     /* Register any additional transpose functions */
 	// >>>>>>> d6baf30400606ce35cc7cd0618fcda5c3ae14e82
-    registerTransFunction(trans, trans_desc);
+    // registerTransFunction(trans, trans_desc);
 }
 
 /*
