@@ -6,7 +6,7 @@ int is_transpose(int M, int N, int A[N][M], int B[M][N]);
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 	int i ,j, x, y;
-	int ii,jj;
+	// int ii,jj;
 	int x1,x2,x3,x4,x5,x6,x7,x8;
 	if(N==4&&M==4){
 		x1=A[0][0];x2=A[0][1];x3=A[0][2];x4=A[0][3];
@@ -269,7 +269,7 @@ void registerFunctions(){
 	// 	registerTransFunction(transpose_submit_of_67x61 ,transpose_submit_of_67x61_desc);
 	//     /* Register any additional transpose functions */
 	// >>>>>>> d6baf30400606ce35cc7cd0618fcda5c3ae14e82
-    // registerTransFunction(trans, trans_desc);
+    registerTransFunction(trans, trans_desc);
 }
 
 /*
