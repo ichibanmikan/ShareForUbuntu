@@ -2,6 +2,7 @@ setBits:4  tagBits:63c S 18f08c,1 miss
 setBits:5  tagBits:63c L 18f0a0,8 miss 
 setBits:4  tagBits:63c L 18f084,4 hit 
 setBits:4  tagBits:63c L 18f080,4 hit 
+
 setBits:4  tagBits:43c L 10f080,4 miss  eviction 
 setBits:4  tagBits:43c L 10f084,4 hit 
 setBits:4  tagBits:43c L 10f088,4 hit 
@@ -18,6 +19,7 @@ setBits:4  tagBits:53c S 14f090,4 hit
 setBits:c  tagBits:53c S 14f190,4 hit 
 setBits:14  tagBits:53c S 14f290,4 hit 
 setBits:1c  tagBits:53c S 14f390,4 hit 
+
 setBits:c  tagBits:43c L 10f180,4 miss  eviction 
 setBits:c  tagBits:43c L 10f184,4 hit 
 setBits:c  tagBits:43c L 10f188,4 hit 
@@ -34,6 +36,7 @@ setBits:4  tagBits:53c S 14f094,4 hit
 setBits:c  tagBits:53c S 14f194,4 hit 
 setBits:14  tagBits:53c S 14f294,4 hit 
 setBits:1c  tagBits:53c S 14f394,4 hit 
+
 setBits:14  tagBits:43c L 10f280,4 miss  eviction 
 setBits:14  tagBits:43c L 10f284,4 hit 
 setBits:14  tagBits:43c L 10f288,4 hit 
