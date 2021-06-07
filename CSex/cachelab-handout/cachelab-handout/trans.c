@@ -166,6 +166,36 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N]){
 				}
 			}
 		}
+
+		// for(i=0;i<N;i+=4){
+		// 	for(j=0;j<M;j+=4){
+		// 		for(x=i;x<N&&x<i+4;x++){
+		// 			for(y=j;y<M&&y<j+4;y++){
+		// 				B[y][x]=A[x][y];
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+		// for(i=0;i<N;i+=8){
+		// 	for(j=0;j<M;j+=8){
+		// 		for(x=i;x<N&&x<i+8;x++){
+		// 			for(y=j;y<M&&y<j+8;y++){
+		// 				B[y][x]=A[x][y];
+		// 			}
+		// 		}
+		// 	}
+		// }
+	
+		// for(i=0;i<N;i+=20){
+		// 	for(j=0;j<M;j+=20){
+		// 		for(x=i;x<N&&x<i+20;x++){
+		// 			for(y=j;y<M&&y<j+20;y++){
+		// 				B[y][x]=A[x][y];
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 }
 // char transpose_submit_of_32_desc[]="Transpose submission_of_32";
