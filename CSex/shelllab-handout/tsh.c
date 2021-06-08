@@ -165,22 +165,22 @@ int main(int argc, char **argv)
 */
 
 void eval(char *cmdline){
-    char *argv[MAXARGS];
-    pid_t pid;
-    char buf[MAXLINE];
-    strcpy(buf, cmdline);
-    parseline(buf, argv);
-    if(argv[0]==NULL){
-        return ;
-    }
-    if(!builtin_cmd(argv)){
-        if((pid=fork())==0){
-            if(execve(argv[0], argv, environ)<0){
-                printf("%s:Command not found\n", argv[0]);
-                exit(0);
-            } 
-        }
-    }
+    // char *argv[MAXARGS];
+    // pid_t pid;
+    // char buf[MAXLINE];
+    // strcpy(buf, cmdline);
+    // parseline(buf, argv);
+    // if(argv[0]==NULL){
+    //     return ;
+    // }
+    // if(!builtin_cmd(argv)){
+    //     if((pid=fork())==0){
+    //         if(execve(argv[0], argv, environ)<0){
+    //             printf("%s:Command not found\n", argv[0]);
+    //             exit(0);
+    //         } 
+    //     }
+    // }
     return ;
 }
 
@@ -246,20 +246,20 @@ int parseline(const char *cmdline, char **argv)
  *    it immediately.  
  */
 int builtin_cmd(char **argv){
-    if(!strcmp(argv[0],"quit")){
-        exit(0);
-    }
-    if(!strcmp(argv[0],"&")){
-        return 1;
-    }
-    if(!strcmp(argv[0],"bg")||!strcmp(argv[0],"fg")){
-        do_bgfg(argv);
-        return 1;
-    }
-    if(!strcmp(argv[0],"jobs")){
-        listjobs(jobs);
-        return 1;
-    }
+    // if(!strcmp(argv[0],"quit")){
+    //     exit(0);
+    // }
+    // if(!strcmp(argv[0],"&")){
+    //     return 1;
+    // }
+    // if(!strcmp(argv[0],"bg")||!strcmp(argv[0],"fg")){
+    //     do_bgfg(argv);
+    //     return 1;
+    // }
+    // if(!strcmp(argv[0],"jobs")){
+    //     listjobs(jobs);
+    //     return 1;
+    // }
     return 0;   
 }
 
