@@ -181,6 +181,14 @@ void eval(char *cmdline){
             }//使用execve方法创建子进程，如果在所给路径没有找到可执行文件，就输出命令未找到
         }
     }//如果不是系统内置命令
+    state=parseline(buf, argv)?BG:FG;
+    addjob(jobs, pid, state, cmdline);
+    if(state==FG){
+        waitfg(pid);
+    }
+    else{
+        printf("[%d] (%d) %s\n",pid2jid(pid), pid, cmdline);;
+    }
     return ;
 }
 
