@@ -165,33 +165,63 @@ int main(int argc, char **argv)
 */
 
 void eval(char *cmdline){
-    char *argv[MAXARGS];
+    char *argv[MAXLINE];    /*argument list of execve()*/
+    char buf[MAXLINE];      /*hold modified commend line*/
+    int bg;                 /*should the job run in bg or fg?*/
     pid_t pid;
-    char buf[MAXLINE];
-    int state;
-    strcpy(buf, cmdline);
-    parseline(buf, argv); //从文件中读入命令
+    sigset_t mask;          /*mask for signal*/
+    stpcpy(buf,cmdline);
+    bg = parseline(buf,argv);
     if(argv[0]==NULL){
-        return ;
-    }//没有命令就退出
-    if(!builtin_cmd(argv)){
-        if((pid=fork())==0){
-            if(execve(argv[0], argv, environ)<0){
-                printf("%s:Command not found\n", argv[0]);
+        return;     /*ignore empty line*/
+    }
+    if(!builtin_cmd(argv)){                         /*not a build in cmd*/
+        // Sigemptyset(&mask);
+        // Sigaddset(&mask,SIGCHLD);
+        // Sigprocmask(SIG_BLOCK,&mask,NULL);           /*block the SIGCHLD signal*/
+        if((pid = Fork())==0){
+            // Sigprocmask(SIG_UNBLOCK,&mask,NULL);     /*unblock the SIGCHLD signal in child*/
+            // Setpgid(0,0);                            /*puts the child in a new process group*/
+            if(execve(argv[0],argv,environ)<0){
+                printf("%s: Command not found\n",argv[0]);
                 exit(0);
-            }//使用execve方法创建子进程，如果在所给路径没有找到可执行文件，就输出命令未找到
+            }
         }
-    }//如果不是系统内置命令
-    state=parseline(buf, argv)?BG:FG;
-    addjob(jobs, pid, state, cmdline);
-    if(state==FG){
-        waitfg(pid);
+        addjob(jobs, pid, bg?BG:FG,cmdline);        /*add job into jobs*/
+        // Sigprocmask(SIG_UNBLOCK,&mask,NULL);        /*unblock the SIGCHLD signal in parent*/
+        bg ? printf("[%d] (%d) %s", pid2jid(pid), pid,cmdline):waitfg(pid); /*do in background or foreground*/
     }
-    else{
-        printf("[%d] (%d) %s\n",pid2jid(pid), pid, cmdline);;
-    }
-    return ;
+    return;
 }
+
+// void eval(char *cmdline){
+//     char *argv[MAXARGS];
+//     pid_t pid;
+//     char buf[MAXLINE];
+//     int state;
+//     strcpy(buf, cmdline);
+//     parseline(buf, argv); //从文件中读入命令
+//     if(argv[0]==NULL){
+//         return ;
+//     }//没有命令就退出
+//     if(!builtin_cmd(argv)){
+//         if((pid=fork())==0){
+//             if(execve(argv[0], argv, environ)<0){
+//                 printf("%s:Command not found\n", argv[0]);
+//                 exit(0);
+//             }//使用execve方法创建子进程，如果在所给路径没有找到可执行文件，就输出命令未找到
+//         }
+//     }//如果不是系统内置命令
+//     state=parseline(buf, argv)?BG:FG;
+//     addjob(jobs, pid, state, cmdline);
+//     if(state==FG){
+//         waitfg(pid);
+//     }
+//     else{
+//         printf("[%d] (%d) %s\n",pid2jid(pid), pid, cmdline);
+//     }
+//     return ;
+// }
 
 /* 
  * parseline - Parse the command line and build the argv array.
