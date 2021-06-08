@@ -9,16 +9,15 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-int main(int argc, char **argv) 
-{
+int main(int argc, char **argv){
     int i, secs;
-
-    if (argc != 2) {
-	fprintf(stderr, "Usage: %s <n>\n", argv[0]);
-	exit(0);
-    }
-    secs = atoi(argv[1]);
-    for (i=0; i < secs; i++)
-	sleep(1);
+    if (argc!=2) {
+        fprintf(stderr, "Usage: %s <n>\n", argv[0]);
+        exit(0);
+    }//argc不为2时退出
+    secs = atoi(argv[1]);//得到argv[1]参数的时间
+    for (i=0; i < secs; i++){
+        sleep(1);
+    }//休眠secs秒
     exit(0);
 }
