@@ -169,7 +169,7 @@ void eval(char *cmdline){
     char buf[MAXLINE];      /*hold modified commend line*/
     int bg;                 /*should the job run in bg or fg?*/
     pid_t pid;
-    sigset_t mask;          /*mask for signal*/
+    // sigset_t mask;          /*mask for signal*/
     stpcpy(buf,cmdline);
     bg = parseline(buf,argv);
     if(argv[0]==NULL){
@@ -179,7 +179,7 @@ void eval(char *cmdline){
         // Sigemptyset(&mask);
         // Sigaddset(&mask,SIGCHLD);
         // Sigprocmask(SIG_BLOCK,&mask,NULL);           /*block the SIGCHLD signal*/
-        if((pid = Fork())==0){
+        if((pid=fork())==0){
             // Sigprocmask(SIG_UNBLOCK,&mask,NULL);     /*unblock the SIGCHLD signal in child*/
             // Setpgid(0,0);                            /*puts the child in a new process group*/
             if(execve(argv[0],argv,environ)<0){
