@@ -168,6 +168,7 @@ void eval(char *cmdline){
     char *argv[MAXARGS];
     pid_t pid;
     char buf[MAXLINE];
+    int state;
     strcpy(buf, cmdline);
     parseline(buf, argv); //从文件中读入命令
     if(argv[0]==NULL){
