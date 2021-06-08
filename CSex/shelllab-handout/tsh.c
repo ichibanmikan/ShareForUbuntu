@@ -169,18 +169,18 @@ void eval(char *cmdline){
     pid_t pid;
     char buf[MAXLINE];
     strcpy(buf, cmdline);
-    parseline(buf, argv);
+    parseline(buf, argv); //从文件中读入命令
     if(argv[0]==NULL){
         return ;
-    }
+    }//没有命令就退出
     if(!builtin_cmd(argv)){
         if((pid=fork())==0){
             if(execve(argv[0], argv, environ)<0){
                 printf("%s:Command not found\n", argv[0]);
                 exit(0);
-            } 
+            }//使用execve方法创建子进程，如果在所给路径没有找到可执行文件，就输出命令未找到
         }
-    }
+    }//如果不是系统内置命令
     return ;
 }
 
@@ -252,6 +252,10 @@ int builtin_cmd(char **argv){
     if(!strcmp(argv[0],"&")){
         return 1;
     }
+    return 0;   
+}
+
+/*  
     if(!strcmp(argv[0],"bg")||!strcmp(argv[0],"fg")){
         do_bgfg(argv);
         return 1;
@@ -260,8 +264,7 @@ int builtin_cmd(char **argv){
         listjobs(jobs);
         return 1;
     }
-    return 0;   
-}
+*/
 
 /* 
  * do_bgfg - Execute the builtin bg and fg commands
