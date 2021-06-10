@@ -164,6 +164,29 @@ int main(int argc, char **argv)
  * when we type ctrl-c (ctrl-z) at the keyboard.  
 */
 
+void eval(char *cmdline){
+    char *argv[MAXLINE]; 
+    char buf[MAXLINE];   
+    int bg;               
+    pid_t pid;
+    stpcpy(buf,cmdline);
+    bg = parseline(buf,argv);
+    if(argv[0]==NULL){
+        return; 
+    }
+    if(!builtin_cmd(argv)){         
+        if((pid=fork())==0){
+            if(execve(argv[0],argv,environ)<0){
+                printf("%s: Command not found\n",argv[0]);
+                exit(0);
+            }
+        }
+        addjob(jobs, pid, bg?BG:FG,cmdline);
+        bg ? printf("[%d] (%d) %s", pid2jid(pid), pid,cmdline):waitfg(pid);
+    }
+    return;
+}
+
 // void eval(char *cmdline){
 //     char *argv[MAXLINE];    /*argument list of execve()*/
 //     char buf[MAXLINE];      /*hold modified commend line*/
@@ -194,34 +217,34 @@ int main(int argc, char **argv)
 //     return;
 // }
 
-void eval(char *cmdline){
-    char *argv[MAXARGS];
-    pid_t pid;
-    char buf[MAXLINE];
-    int state;
-    strcpy(buf, cmdline);
-    parseline(buf, argv); //从文件中读入命令
-    if(argv[0]==NULL){
-        return ;
-    }//没有命令就退出
-    if(!builtin_cmd(argv)){
-        if((pid=fork())==0){
-            if(execve(argv[0], argv, environ)<0){
-                printf("%s:Command not found\n", argv[0]);
-                exit(0);
-            }//使用fork函数创建子进程，并使用execve方法,如果在所给路径没有找到可执行文件，就输出命令未找到
-        }
-        state=parseline(buf, argv)?BG:FG;
-        addjob(jobs, pid, state, cmdline);
-        if(state==FG){
-            waitfg(pid);
-        }
-        else{
-            printf("[%d] (%d) %s\n",pid2jid(pid), pid, cmdline);
-        }
-    }//如果不是系统内置命令
-    return ;
-}
+// void eval(char *cmdline){
+//     char *argv[MAXARGS];
+//     pid_t pid;
+//     char buf[MAXLINE];
+//     int state;
+//     strcpy(buf, cmdline);
+//     parseline(buf, argv); //从文件中读入命令
+//     if(argv[0]==NULL){
+//         return ;
+//     }//没有命令就退出
+//     if(!builtin_cmd(argv)){
+//         if((pid=fork())==0){
+//             if(execve(argv[0], argv, environ)<0){
+//                 printf("%s:Command not found\n", argv[0]);
+//                 exit(0);
+//             }//使用fork函数创建子进程，并使用execve方法,如果在所给路径没有找到可执行文件，就输出命令未找到
+//         }
+//         state=parseline(buf, argv)?BG:FG;
+//         addjob(jobs, pid, state, cmdline);
+//         if(state==FG){
+//             waitfg(pid);
+//         }
+//         else{
+//             printf("[%d] (%d) %s\n",pid2jid(pid), pid, cmdline);
+//         }
+//     }//如果不是系统内置命令
+//     return ;
+// }
 
 // void eval(char *cmdline){
 //     char *argv[MAXARGS];
