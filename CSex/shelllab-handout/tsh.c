@@ -164,41 +164,69 @@ int main(int argc, char **argv)
  * when we type ctrl-c (ctrl-z) at the keyboard.  
 */
 
+// void eval(char *cmdline){
+//     char *argv[MAXLINE];    /*argument list of execve()*/
+//     char buf[MAXLINE];      /*hold modified commend line*/
+//     int bg;                 /*should the job run in bg or fg?*/
+//     pid_t pid;
+//     // sigset_t mask;          /*mask for signal*/
+//     stpcpy(buf,cmdline);
+//     bg = parseline(buf,argv);
+//     if(argv[0]==NULL){
+//         return;     /*ignore empty line*/
+//     }
+//     if(!builtin_cmd(argv)){                         /*not a build in cmd*/
+//         // Sigemptyset(&mask);
+//         // Sigaddset(&mask,SIGCHLD);
+//         // Sigprocmask(SIG_BLOCK,&mask,NULL);           /*block the SIGCHLD signal*/
+//         if((pid=fork())==0){
+//             // Sigprocmask(SIG_UNBLOCK,&mask,NULL);     /*unblock the SIGCHLD signal in child*/
+//             // Setpgid(0,0);                            /*puts the child in a new process group*/
+//             if(execve(argv[0],argv,environ)<0){
+//                 printf("%s: Command not found\n",argv[0]);
+//                 exit(0);
+//             }
+//         }
+//         addjob(jobs, pid, bg?BG:FG,cmdline);        /*add job into jobs*/
+//         // Sigprocmask(SIG_UNBLOCK,&mask,NULL);        /*unblock the SIGCHLD signal in parent*/
+//         bg ? printf("[%d] (%d) %s", pid2jid(pid), pid,cmdline):waitfg(pid); /*do in background or foreground*/
+//     }
+//     return;
+// }
+
 void eval(char *cmdline){
-    char *argv[MAXLINE];    /*argument list of execve()*/
-    char buf[MAXLINE];      /*hold modified commend line*/
-    int bg;                 /*should the job run in bg or fg?*/
+    char *argv[MAXARGS];
     pid_t pid;
-    // sigset_t mask;          /*mask for signal*/
-    stpcpy(buf,cmdline);
-    bg = parseline(buf,argv);
+    char buf[MAXLINE];
+    int state;
+    strcpy(buf, cmdline);
+    parseline(buf, argv); //从文件中读入命令
     if(argv[0]==NULL){
-        return;     /*ignore empty line*/
-    }
-    if(!builtin_cmd(argv)){                         /*not a build in cmd*/
-        // Sigemptyset(&mask);
-        // Sigaddset(&mask,SIGCHLD);
-        // Sigprocmask(SIG_BLOCK,&mask,NULL);           /*block the SIGCHLD signal*/
+        return ;
+    }//没有命令就退出
+    if(!builtin_cmd(argv)){
         if((pid=fork())==0){
-            // Sigprocmask(SIG_UNBLOCK,&mask,NULL);     /*unblock the SIGCHLD signal in child*/
-            // Setpgid(0,0);                            /*puts the child in a new process group*/
-            if(execve(argv[0],argv,environ)<0){
-                printf("%s: Command not found\n",argv[0]);
+            if(execve(argv[0], argv, environ)<0){
+                printf("%s:Command not found\n", argv[0]);
                 exit(0);
+            }//使用fork函数创建子进程，并使用execve方法,如果在所给路径没有找到可执行文件，就输出命令未找到
+            state=parseline(buf, argv)?BG:FG;
+            addjob(jobs, pid, state, cmdline);
+            if(state==FG){
+                waitfg(pid);
+            }
+            else{
+                printf("[%d] (%d) %s\n",pid2jid(pid), pid, cmdline);
             }
         }
-        addjob(jobs, pid, bg?BG:FG,cmdline);        /*add job into jobs*/
-        // Sigprocmask(SIG_UNBLOCK,&mask,NULL);        /*unblock the SIGCHLD signal in parent*/
-        bg ? printf("[%d] (%d) %s", pid2jid(pid), pid,cmdline):waitfg(pid); /*do in background or foreground*/
-    }
-    return;
+    }//如果不是系统内置命令
+    return ;
 }
 
 // void eval(char *cmdline){
 //     char *argv[MAXARGS];
 //     pid_t pid;
 //     char buf[MAXLINE];
-//     int state;
 //     strcpy(buf, cmdline);
 //     parseline(buf, argv); //从文件中读入命令
 //     if(argv[0]==NULL){
@@ -209,17 +237,9 @@ void eval(char *cmdline){
 //             if(execve(argv[0], argv, environ)<0){
 //                 printf("%s:Command not found\n", argv[0]);
 //                 exit(0);
-//             }//使用execve方法创建子进程，如果在所给路径没有找到可执行文件，就输出命令未找到
+//             }//使用fork函数创建子进程，并使用execve方法,如果在所给路径没有找到可执行文件，就输出命令未找到
 //         }
 //     }//如果不是系统内置命令
-//     state=parseline(buf, argv)?BG:FG;
-//     addjob(jobs, pid, state, cmdline);
-//     if(state==FG){
-//         waitfg(pid);
-//     }
-//     else{
-//         printf("[%d] (%d) %s\n",pid2jid(pid), pid, cmdline);
-//     }
 //     return ;
 // }
 
@@ -420,7 +440,7 @@ int addjob(struct job_t *jobs, pid_t pid, int state, char *cmdline)
     }
     printf("Tried to create too many jobs\n");
     return 0;
-}
+}//将一个新的作业添加到作业表中
 
 /* deletejob - Delete a job whose PID=pid from the job list */
 int deletejob(struct job_t *jobs, pid_t pid) 
@@ -438,7 +458,7 @@ int deletejob(struct job_t *jobs, pid_t pid)
 	}
     }
     return 0;
-}
+}//从作业表中删除一个作业
 
 /* fgpid - Return PID of current foreground job, 0 if no such job */
 pid_t fgpid(struct job_t *jobs) {
@@ -448,7 +468,7 @@ pid_t fgpid(struct job_t *jobs) {
 	if (jobs[i].state == FG)
 	    return jobs[i].pid;
     return 0;
-}
+}//返回作业表中前台作业的作业号
 
 /* getjobpid  - Find a job (by PID) on the job list */
 struct job_t *getjobpid(struct job_t *jobs, pid_t pid) {
@@ -460,7 +480,7 @@ struct job_t *getjobpid(struct job_t *jobs, pid_t pid) {
 	if (jobs[i].pid == pid)
 	    return &jobs[i];
     return NULL;
-}
+}//通过进程号找到作业(返回作业)
 
 /* getjobjid  - Find a job (by JID) on the job list */
 struct job_t *getjobjid(struct job_t *jobs, int jid) 
@@ -473,7 +493,7 @@ struct job_t *getjobjid(struct job_t *jobs, int jid)
 	if (jobs[i].jid == jid)
 	    return &jobs[i];
     return NULL;
-}
+}//通过作业号找到作业
 
 /* pid2jid - Map process ID to job ID */
 int pid2jid(pid_t pid) 
@@ -487,7 +507,7 @@ int pid2jid(pid_t pid)
             return jobs[i].jid;
         }
     return 0;
-}
+}//根据进程号找到对应的作业(返回作业号)
 
 /* listjobs - Print the job list */
 void listjobs(struct job_t *jobs) 
@@ -514,7 +534,7 @@ void listjobs(struct job_t *jobs)
 	    printf("%s", jobs[i].cmdline);
 	}
     }
-}
+}//打印作业表
 /******************************
  * end job list helper routines
  ******************************/
