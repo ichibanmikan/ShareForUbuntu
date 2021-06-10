@@ -164,58 +164,58 @@ int main(int argc, char **argv)
  * when we type ctrl-c (ctrl-z) at the keyboard.  
 */
 
-void eval(char *cmdline){
-    char *argv[MAXLINE]; 
-    char buf[MAXLINE];   
-    int bg;               
-    pid_t pid;
-    stpcpy(buf,cmdline);
-    bg = parseline(buf,argv);
-    if(argv[0]==NULL){
-        return; 
-    }
-    if(!builtin_cmd(argv)){         
-        if((pid=fork())==0){
-            if(execve(argv[0],argv,environ)<0){
-                printf("%s: Command not found\n",argv[0]);
-                exit(0);
-            }
-        }
-        addjob(jobs, pid, bg?BG:FG,cmdline);
-        bg ? printf("[%d] (%d) %s", pid2jid(pid), pid,cmdline):waitfg(pid);
-    }
-    return;
-}
-
 // void eval(char *cmdline){
-//     char *argv[MAXLINE];    /*argument list of execve()*/
-//     char buf[MAXLINE];      /*hold modified commend line*/
-//     int bg;                 /*should the job run in bg or fg?*/
+//     char *argv[MAXLINE]; 
+//     char buf[MAXLINE];   
+//     int bg;               
 //     pid_t pid;
-//     // sigset_t mask;          /*mask for signal*/
 //     stpcpy(buf,cmdline);
 //     bg = parseline(buf,argv);
 //     if(argv[0]==NULL){
-//         return;     /*ignore empty line*/
+//         return; 
 //     }
-//     if(!builtin_cmd(argv)){                         /*not a build in cmd*/
-//         // Sigemptyset(&mask);
-//         // Sigaddset(&mask,SIGCHLD);
-//         // Sigprocmask(SIG_BLOCK,&mask,NULL);           /*block the SIGCHLD signal*/
+//     if(!builtin_cmd(argv)){         
 //         if((pid=fork())==0){
-//             // Sigprocmask(SIG_UNBLOCK,&mask,NULL);     /*unblock the SIGCHLD signal in child*/
-//             // Setpgid(0,0);                            /*puts the child in a new process group*/
 //             if(execve(argv[0],argv,environ)<0){
 //                 printf("%s: Command not found\n",argv[0]);
 //                 exit(0);
 //             }
 //         }
-//         addjob(jobs, pid, bg?BG:FG,cmdline);        /*add job into jobs*/
-//         // Sigprocmask(SIG_UNBLOCK,&mask,NULL);        /*unblock the SIGCHLD signal in parent*/
-//         bg ? printf("[%d] (%d) %s", pid2jid(pid), pid,cmdline):waitfg(pid); /*do in background or foreground*/
+//         addjob(jobs, pid, bg?BG:FG,cmdline);
+//         bg ? printf("[%d] (%d) %s", pid2jid(pid), pid,cmdline):waitfg(pid);
 //     }
 //     return;
 // }
+
+void eval(char *cmdline){
+    char *argv[MAXLINE];    /*argument list of execve()*/
+    char buf[MAXLINE];      /*hold modified commend line*/
+    int bg;                 /*should the job run in bg or fg?*/
+    pid_t pid;
+    // sigset_t mask;          /*mask for signal*/
+    stpcpy(buf,cmdline);
+    bg = parseline(buf,argv);
+    if(argv[0]==NULL){
+        return;     /*ignore empty line*/
+    }
+    if(!builtin_cmd(argv)){                         /*not a build in cmd*/
+        // Sigemptyset(&mask);
+        // Sigaddset(&mask,SIGCHLD);
+        // Sigprocmask(SIG_BLOCK,&mask,NULL);           /*block the SIGCHLD signal*/
+        if((pid=fork())==0){
+            // Sigprocmask(SIG_UNBLOCK,&mask,NULL);     /*unblock the SIGCHLD signal in child*/
+            // Setpgid(0,0);                            /*puts the child in a new process group*/
+            if(execve(argv[0],argv,environ)<0){
+                printf("%s: Command not found\n",argv[0]);
+                exit(0);
+            }
+        }
+        addjob(jobs, pid, bg?BG:FG,cmdline);        /*add job into jobs*/
+        // Sigprocmask(SIG_UNBLOCK,&mask,NULL);        /*unblock the SIGCHLD signal in parent*/
+        bg ? printf("[%d] (%d) %s", pid2jid(pid), pid,cmdline):waitfg(pid); /*do in background or foreground*/
+    }
+    return;
+}
 
 // void eval(char *cmdline){
 //     char *argv[MAXARGS];
