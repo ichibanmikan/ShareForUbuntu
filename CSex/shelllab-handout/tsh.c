@@ -363,8 +363,15 @@ void do_bgfg(char **argv)
 /* 
  * waitfg - Block until process pid is no longer the foreground process
  */
-void waitfg(pid_t pid)
-{
+void waitfg(pid_t pid){   
+    struct job_t *job;
+    job=getjobpid(jobs, pid);
+    while(1){
+        pause();
+        if((job->pid==0&&job->state==UNDEF)||(job->pid==pid&&job->state==ST)){
+            break;
+        }
+    }
     return;
 }
 
@@ -379,8 +386,38 @@ void waitfg(pid_t pid)
  *     available zombie children, but doesn't wait for any other
  *     currently running children to terminate.  
  */
-void sigchld_handler(int sig) 
-{
+void sigchld_handler(int sig){
+    pid_t pid;
+    struct job_t *job;
+    int jid;
+    int status;
+    while((pid=waitpid(-1, &status, WUNTRACED|WNOHANG))>0){
+        job=getjobpid(jobs, pid);
+        if(!job){
+            app_error("can't find the job");
+        }
+        jid=job->jid;
+        if(WIFEXITED(status)){
+            if(deletejob(jobs, pid)){
+            }else{
+                app_error("can't delete job");
+            }
+        }
+        if(WIFSIGNALED(status)){
+            if(deletejob(jobs, pid)){
+            }else{
+                app_error("can't delete job");
+            }
+            printf("Job [%d] (%d) terminated by signal %d\n", jid, pid, WTERMSIG(status));
+        }
+        if(WIFSTOPPED(status)){
+            job->state = ST;
+            printf("Job [%d] (%d) stopped by signal %d\n", jid, pid, WSTOPSIG(status));
+        }
+    }//waitpid返回值如果为0，说明waitpid没有出错，而可能是别的函数报错，比如pause
+    if(pid<0&&errno!=ECHILD){ 
+        unix_error("waitpid error");
+    }
     return;
 }
 
@@ -389,8 +426,12 @@ void sigchld_handler(int sig)
  *    user types ctrl-c at the keyboard.  Catch it and send it along
  *    to the foreground job.  
  */
-void sigint_handler(int sig) 
-{
+void sigint_handler(int sig){
+    pid_t pid;
+    pid = fgpid(jobs);
+    if(pid){
+        Kill(-pid, SIGINT);
+    }
     return;
 }
 

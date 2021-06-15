@@ -415,7 +415,7 @@ void sigchld_handler(int sig)
  *    to the foreground job.  
  */
 void sigint_handler(int sig) 
-{
+{ 
     pid_t pid;
     pid = fgpid(jobs);
     if(pid){
