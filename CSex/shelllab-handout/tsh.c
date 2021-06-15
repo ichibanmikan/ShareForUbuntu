@@ -428,7 +428,7 @@ void sigchld_handler(int sig){
  */
 void sigint_handler(int sig){
     pid_t pid;
-    pid = fgpid(jobs);
+    pid=fgpid(jobs);
     if(pid){
         Kill(-pid, SIGINT);
     }
